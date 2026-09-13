@@ -1,10 +1,10 @@
 # 🛡️ AuditX — Security Audit Platform
 
-> **⚠️ NOTE:** This project is currently in the **PROTOTYPE** phase. It is actively being developed and may contain bugs or incomplete features. Use with caution and only on authorized targets.
+> **NOTE:** This project is currently in the **PROTOTYPE** phase. It is actively being developed and may contain bugs or incomplete features. Use with caution and only on authorized targets.
 
 AuditX is a native Linux desktop GUI application built using Quickshell (QML) and Python. It coordinates and runs security audit tools in parallel or sequence, displaying real-time terminal output and structured reports.
 
-## 📁 Project Directory Structure
+## Project Directory Structure
 ```text
 auditx/
 ├── backend/
@@ -17,14 +17,14 @@ auditx/
 └── shell.qml             # Main entry point & Quickshell orchestrator
 ```
 
-## 🛠️ Integrated CLI Tools
+## Integrated CLI Tools
 - **Vulnerability**: `nuclei`
 - **Web Security**: `nikto`, `whatweb`, `sqlmap`, `gobuster`
 - **Network & Active Directory**: `nmap`, `rustscan`, `netexec`, `enum4linux-ng`
 - **Exploit & Framework**: `metasploit` (`msfconsole`, `msfvenom`, `msfrpcd`)
 - **OSINT & Secrets**: `sherlock`, `theHarvester`, `sublist3r`, `gitleaks`
 
-## ⚙️ Requirements & Manual Installation Guide
+## Requirements & Manual Installation Guide
 
 Since AuditX is a GUI orchestrator, you **must install the core dependencies and security tools manually** before running it for the best experience. The auto-install feature is experimental and might fail on some distributions.
 
@@ -58,7 +58,7 @@ sudo pacman -S nuclei gitleaks
 ```
 *Make sure to initialize tools like nuclei (`nuclei -update-templates`) and metasploit (`msfdb init`) before first use.*
 
-## 🚀 Running the App
+## Running the App
 
 1. Clone or download this repository.
 2. Grant run permissions to the launcher script:
@@ -70,7 +70,7 @@ sudo pacman -S nuclei gitleaks
    ./launch.sh
    ```
 
-## ✨ Features
+## Features
 - **Auto-Detection**: On boot, the app checks if integrated tools are installed.
 - **Auto-Installation**: If a tool is missing, the backend will attempt to automatically pull and install it before running (e.g. using `pip3` or `pacman`). *(Prototype)*
 - **Metasploit RPC Integration**: Automates `msfrpcd` daemon connection for payload generation and listeners.
