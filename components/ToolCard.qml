@@ -18,20 +18,20 @@ Rectangle {
 
     width: 220
     height: 70
-    radius: 8
+    radius: 4
 
     color: {
-        if (isRunning) return "#131b26"
-        if (isDone)    return "#111815"
-        if (hasFailed) return "#1c1212"
-        return isEnabled ? "#12151f" : "#0a0c12"
+        if (isRunning) return "#001a33"
+        if (isDone)    return "#051105"
+        if (hasFailed) return "#1a0505"
+        return isEnabled ? "#111111" : "#050505"
     }
 
     border.color: {
-        if (isRunning) return "#2a4a7a"
-        if (isDone)    return "#2a5a3a"
-        if (hasFailed) return "#7a2a2a"
-        return isEnabled ? "#1e2638" : "#111520"
+        if (isRunning) return "#0066ff"
+        if (isDone)    return "#111111"
+        if (hasFailed) return "#ff3333"
+        return isEnabled ? "#222222" : "#111111"
     }
     border.width: 1
 
@@ -57,10 +57,10 @@ Rectangle {
                 radius: 3
                 anchors.verticalCenter: parent.verticalCenter
                 color: {
-                    if (isRunning) return "#5b8fff"
-                    if (isDone)    return "#39ff7a"
-                    if (hasFailed) return "#ff4a4a"
-                    return isInstalled ? "#4a9f7a" : "#444"
+                    if (isRunning) return "#0066ff"
+                    if (isDone)    return "#00cc44"
+                    if (hasFailed) return "#ff3333"
+                    return isInstalled ? "#0066ff" : "#333333"
                 }
                 
                 SequentialAnimation on opacity {
@@ -76,7 +76,7 @@ Rectangle {
                 font.pixelSize: 12
                 font.weight: 600
                 font.family: "JetBrains Mono, Fira Mono, monospace"
-                color: isEnabled ? "#d8e8ff" : "#556"
+                color: isEnabled ? "#ffffff" : "#666666"
                 Behavior on color { ColorAnimation { duration: 150 } }
             }
             
@@ -86,15 +86,15 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: missingLabel.implicitWidth + 8; height: 14
                 radius: 4
-                color: "#1a1310"
-                border.color: "#3a2a1a"
+                color: "#111111"
+                border.color: "#333333"
                 Text {
                     id: missingLabel
                     anchors.centerIn: parent
                     text: "missing"
                     font.pixelSize: 8
                     font.family: "JetBrains Mono, Fira Mono, monospace"
-                    color: "#ff9f40"
+                    color: "#666666"
                 }
             }
         }
@@ -103,7 +103,7 @@ Rectangle {
             text: root.description
             font.pixelSize: 10
             font.family: "Inter, sans-serif"
-            color: isEnabled ? "#7a8a9a" : "#445"
+            color: isEnabled ? "#888888" : "#444444"
             width: parent.width
             elide: Text.ElideRight
             maximumLineCount: 2
@@ -118,8 +118,8 @@ Rectangle {
         anchors { right: parent.right; verticalCenter: parent.verticalCenter; rightMargin: 12 }
         width: 16; height: 16
         radius: 4
-        color: isEnabled ? "#5b8fff" : "transparent"
-        border.color: isEnabled ? "#5b8fff" : "#3a4a6a"
+        color: isEnabled ? "#0066ff" : "transparent"
+        border.color: isEnabled ? "#0066ff" : "#333333"
         border.width: 1
 
         Behavior on color { ColorAnimation { duration: 150 } }
@@ -129,7 +129,7 @@ Rectangle {
             text: "✓"
             font.pixelSize: 10
             font.weight: 800
-            color: "#0a0b12"
+            color: "#000000"
             opacity: isEnabled ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 150 } }
         }
@@ -139,12 +139,12 @@ Rectangle {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
-        onEntered: root.border.color = Qt.binding(function(){ return isEnabled ? "#3a4a7a" : "#2a3a5a" })
+        onEntered: root.border.color = Qt.binding(function(){ return isEnabled ? "#0066ff" : "#222222" })
         onExited: root.border.color = Qt.binding(function(){ 
-            if (isRunning) return "#2a4a7a"
-            if (isDone)    return "#2a5a3a"
-            if (hasFailed) return "#7a2a2a"
-            return isEnabled ? "#1e2638" : "#111520"
+            if (isRunning) return "#0066ff"
+            if (isDone)    return "#111111"
+            if (hasFailed) return "#ff3333"
+            return isEnabled ? "#222222" : "#111111"
         })
         onClicked: {
             root.isEnabled = !root.isEnabled

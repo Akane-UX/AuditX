@@ -12,46 +12,41 @@ Rectangle {
         id: resultsModel
     }
 
-    color: "#09090f"
-    radius: 10
+    color: "#050505"
+    radius: 6
     clip: true
+    border.color: "#111111"
+    border.width: 1
 
     // Header
     Rectangle {
         id: reportHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
         height: 36
-        color: "#0e0e18"
-        radius: 10
+        color: "#0a0a0a"
+        radius: 6
         Rectangle {
             anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
             height: 10; color: parent.color
         }
 
-        Row {
-            anchors { left: parent.left; verticalCenter: parent.verticalCenter; leftMargin: 14 }
-            spacing: 7
-            Repeater {
-                model: ["#ff5f57", "#febc2e", "#28c840"]
-                Rectangle { width: 10; height: 10; radius: 5; color: modelData; opacity: 0.8 }
-            }
-        }
-
         Text {
-            anchors.centerIn: parent
+            anchors.left: parent.left; anchors.leftMargin: 14
+            anchors.verticalCenter: parent.verticalCenter
             text: "REPORT"
             font.pixelSize: 11
             font.family: "JetBrains Mono, Fira Mono, monospace"
             font.weight: 500
-            color: "#445"
+            color: "#555555"
         }
 
         // Export button
         Rectangle {
             anchors { right: parent.right; verticalCenter: parent.verticalCenter; rightMargin: 10 }
-            width: 64; height: 22; radius: 5
-            color: exportHover.containsMouse ? "#1a2030" : "transparent"
-            border.color: exportHover.containsMouse ? "#2a3050" : "transparent"
+            width: 64; height: 22; radius: 4
+            color: exportHover.containsMouse ? "#111111" : "transparent"
+            border.color: exportHover.containsMouse ? "#222222" : "transparent"
+            border.width: 1
             Behavior on color { ColorAnimation { duration: 100 } }
 
             Text {
@@ -59,7 +54,7 @@ Rectangle {
                 text: "EXPORT"
                 font.pixelSize: 9
                 font.family: "JetBrains Mono, Fira Mono, monospace"
-                color: "#5b8fff"
+                color: "#0066ff"
             }
 
             MouseArea {
@@ -83,20 +78,20 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "⬡"
             font.pixelSize: 32
-            color: "#2a3050"
+            color: "#333333"
         }
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "No results yet"
             font.pixelSize: 12
             font.family: "JetBrains Mono, Fira Mono, monospace"
-            color: "#445"
+            color: "#666666"
         }
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Run tools to generate a report"
             font.pixelSize: 10
-            color: "#334"
+            color: "#444444"
         }
     }
 
@@ -116,25 +111,25 @@ Rectangle {
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
             contentItem: Rectangle {
-                implicitWidth: 4; radius: 2; color: "#2a3050"
+                implicitWidth: 4; radius: 2; color: "#222222"
             }
         }
 
         delegate: Rectangle {
             width: resultList.width
             height: entryCol.implicitHeight + 24
-            radius: 8
+            radius: 4
             color: {
-                if (model.status === "done")    return "#0f1a14"
-                if (model.status === "failed")  return "#1a0f0f"
-                if (model.status === "running") return "#0f1418"
-                return "#0e101a"
+                if (model.status === "done")    return "#050a11"
+                if (model.status === "failed")  return "#110505"
+                if (model.status === "running") return "#050a11"
+                return "#0a0a0a"
             }
             border.color: {
-                if (model.status === "done")    return "#1e4a30"
-                if (model.status === "failed")  return "#4a1e1e"
-                if (model.status === "running") return "#1e304a"
-                return "#1a2040"
+                if (model.status === "done")    return "#003366"
+                if (model.status === "failed")  return "#330000"
+                if (model.status === "running") return "#0047b3"
+                return "#111111"
             }
             border.width: 1
 
@@ -152,10 +147,10 @@ Rectangle {
                         width: 8; height: 8; radius: 4
                         anchors.verticalCenter: parent.verticalCenter
                         color: {
-                            if (model.status === "done")    return "#2eff9f"
-                            if (model.status === "failed")  return "#ff4040"
-                            if (model.status === "running") return "#39ff7a"
-                            return "#555"
+                            if (model.status === "done")    return "#0066ff"
+                            if (model.status === "failed")  return "#ff3333"
+                            if (model.status === "running") return "#0066ff"
+                            return "#555555"
                         }
                         SequentialAnimation on opacity {
                             running: model.status === "running"
@@ -170,7 +165,7 @@ Rectangle {
                         font.pixelSize: 12
                         font.weight: 700
                         font.family: "JetBrains Mono, Fira Mono, monospace"
-                        color: "#c8d8f8"
+                        color: "#ffffff"
                     }
 
                     Item { width: 1; height: 1 }
@@ -186,16 +181,16 @@ Rectangle {
                         font.pixelSize: 10
                         font.family: "JetBrains Mono, Fira Mono, monospace"
                         color: {
-                            if (model.status === "done")    return "#2eff9f"
-                            if (model.status === "failed")  return "#ff4040"
-                            if (model.status === "running") return "#39ff7a"
-                            return "#555"
+                            if (model.status === "done")    return "#0066ff"
+                            if (model.status === "failed")  return "#ff3333"
+                            if (model.status === "running") return "#0066ff"
+                            return "#555555"
                         }
                     }
                 }
 
                 // Divider
-                Rectangle { width: parent.width; height: 1; color: "#1a2040"; opacity: 0.6 }
+                Rectangle { width: parent.width; height: 1; color: "#111111"; opacity: 1.0 }
 
                 // Output lines preview (last 8)
                 Column {
@@ -215,7 +210,7 @@ Rectangle {
                             text: modelData
                             font.pixelSize: 10
                             font.family: "JetBrains Mono, Fira Mono, monospace"
-                            color: "#5a6a8a"
+                            color: "#888888"
                             wrapMode: Text.WrapAnywhere
                             lineHeight: 1.3
                         }
@@ -229,7 +224,7 @@ Rectangle {
                             try { return "... " + (JSON.parse(model.linesJson || "[]").length - 8) + " more lines in console" } catch(e) { return "" }
                         }
                         font.pixelSize: 9
-                        color: "#334"
+                        color: "#555555"
                     }
                 }
             }

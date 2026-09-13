@@ -8,29 +8,19 @@ Rectangle {
     property alias model: logList.model
     property string currentTool: ""
 
-    color: "#09090f"
-    radius: 10
+    color: "#050505"
+    radius: 6
     clip: true
-
-    // Scanline overlay for terminal feel
-    Rectangle {
-        anchors.fill: parent
-        z: 10
-        color: "transparent"
-        opacity: 0.03
-        Rectangle {
-            anchors.fill: parent
-            color: Qt.rgba(0, 1, 0.2, 0.05)
-        }
-    }
+    border.color: "#111111"
+    border.width: 1
 
     // Header bar
     Rectangle {
         id: header
         anchors { top: parent.top; left: parent.left; right: parent.right }
         height: 36
-        color: "#0e0e18"
-        radius: 10
+        color: "#0a0a0a"
+        radius: 6
 
         // Square bottom
         Rectangle {
@@ -39,36 +29,24 @@ Rectangle {
             color: parent.color
         }
 
-        Row {
-            anchors { left: parent.left; verticalCenter: parent.verticalCenter; leftMargin: 14 }
-            spacing: 7
-
-            Repeater {
-                model: ["#ff5f57", "#febc2e", "#28c840"]
-                Rectangle {
-                    width: 10; height: 10; radius: 5
-                    color: modelData
-                    opacity: 0.8
-                }
-            }
-        }
-
         Text {
-            anchors.centerIn: parent
+            anchors.left: parent.left; anchors.leftMargin: 14
+            anchors.verticalCenter: parent.verticalCenter
             text: currentTool !== "" ? "● " + currentTool.toUpperCase() : "CONSOLE"
             font.pixelSize: 11
             font.family: "JetBrains Mono, Fira Mono, monospace"
             font.weight: 500
-            color: currentTool !== "" ? "#39ff7a" : "#444"
+            color: currentTool !== "" ? "#0066ff" : "#555555"
             Behavior on color { ColorAnimation { duration: 200 } }
         }
 
         // Clear button
         Rectangle {
             anchors { right: parent.right; verticalCenter: parent.verticalCenter; rightMargin: 10 }
-            width: 52; height: 22; radius: 5
-            color: clearHover.containsMouse ? "#1a2030" : "transparent"
-            border.color: clearHover.containsMouse ? "#2a3050" : "transparent"
+            width: 52; height: 22; radius: 4
+            color: clearHover.containsMouse ? "#111111" : "transparent"
+            border.color: clearHover.containsMouse ? "#222222" : "transparent"
+            border.width: 1
             Behavior on color { ColorAnimation { duration: 100 } }
 
             Text {
@@ -77,7 +55,7 @@ Rectangle {
                 font.pixelSize: 9
                 font.family: "JetBrains Mono, Fira Mono, monospace"
                 font.weight: 500
-                color: "#445"
+                color: "#666666"
             }
 
             MouseArea {
@@ -110,7 +88,7 @@ Rectangle {
             contentItem: Rectangle {
                 implicitWidth: 4
                 radius: 2
-                color: "#2a3050"
+                color: "#222222"
             }
         }
 
@@ -123,7 +101,7 @@ Rectangle {
                 text: model.timestamp || ""
                 font.pixelSize: 10
                 font.family: "JetBrains Mono, Fira Mono, monospace"
-                color: "#2a3a5a"
+                color: "#444444"
                 topPadding: 1
             }
 
@@ -132,7 +110,7 @@ Rectangle {
                 font.pixelSize: 10
                 font.family: "JetBrains Mono, Fira Mono, monospace"
                 font.weight: 700
-                color: model.prefixColor || "#39ff7a"
+                color: model.prefixColor || "#0066ff"
                 topPadding: 1
             }
 
@@ -140,7 +118,7 @@ Rectangle {
                 text: model.text || ""
                 font.pixelSize: 10
                 font.family: "JetBrains Mono, Fira Mono, monospace"
-                color: model.textColor || "#a8b8d8"
+                color: model.textColor || "#aaaaaa"
                 width: logList.width - 140
                 wrapMode: Text.WrapAnywhere
                 lineHeight: 1.4
@@ -160,18 +138,18 @@ Rectangle {
         logList.model.append({
             timestamp: ts,
             prefix: prefix,
-            prefixColor: prefixColor || "#39ff7a",
+            prefixColor: prefixColor || "#0066ff",
             text: text,
-            textColor: textColor || "#a8b8d8"
+            textColor: textColor || "#aaaaaa"
         })
     }
 
-    function info(text)    { appendLine("[INFO]",    "#5b8fff", text, "#a8b8d8") }
-    function success(text) { appendLine("[OK]",      "#2eff9f", text, "#c8f8d8") }
-    function warn(text)    { appendLine("[WARN]",    "#ff9f40", text, "#f8d8a8") }
-    function error(text)   { appendLine("[ERROR]",   "#ff4040", text, "#f8a8a8") }
+    function info(text)    { appendLine("[INFO]",    "#0066ff", text, "#aaaaaa") }
+    function success(text) { appendLine("[OK]",      "#0066ff", text, "#cccccc") }
+    function warn(text)    { appendLine("[WARN]",    "#666666", text, "#bbbbbb") }
+    function error(text)   { appendLine("[ERROR]",   "#ff3333", text, "#dddddd") }
     function output(tool, text) {
-        appendLine("[" + tool.toUpperCase() + "]", "#39ff7a", text, "#8a9fb8")
+        appendLine("[" + tool.toUpperCase() + "]", "#0047b3", text, "#888888")
     }
-    function system(text)  { appendLine("[SYS]",    "#6677aa", text, "#667788") }
+    function system(text)  { appendLine("[SYS]",    "#444444", text, "#666666") }
 }

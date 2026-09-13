@@ -336,23 +336,7 @@ ShellRoot {
         // ── Background
         Rectangle {
             anchors.fill: parent
-            color: "#0a0b12"
-
-            Canvas {
-                anchors.fill: parent
-                opacity: 0.04
-                onPaint: {
-                    var ctx = getContext("2d")
-                    ctx.strokeStyle = "#4488ff"
-                    ctx.lineWidth = 0.5
-                    for (var x = 0; x < width; x += 40) {
-                        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke()
-                    }
-                    for (var y = 0; y < height; y += 40) {
-                        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke()
-                    }
-                }
-            }
+            color: "#050505"
         }
 
         // ── Root layout
@@ -371,13 +355,13 @@ ShellRoot {
                     spacing: 10
 
                     Rectangle {
-                        width: 32; height: 32; radius: 8
-                        color: "#1a2050"
-                        border.color: "#2a3070"; border.width: 1
+                        width: 32; height: 32; radius: 6
+                        color: "#0a0a0a"
+                        border.color: "#222"; border.width: 1
                         anchors.verticalCenter: parent.verticalCenter
                         Text {
                             anchors.centerIn: parent
-                            text: "⬡"; font.pixelSize: 16; color: "#5b8fff"
+                            text: "⬡"; font.pixelSize: 16; color: "#0066ff"
                         }
                     }
 
@@ -388,11 +372,11 @@ ShellRoot {
                             text: "AuditX"
                             font.pixelSize: 18; font.weight: 700
                             font.family: "JetBrains Mono, Fira Mono, monospace"
-                            color: "#d8e8ff"; font.letterSpacing: 1
+                            color: "#ffffff"; font.letterSpacing: 1
                         }
                         Text {
                             text: "Security Audit Platform"
-                            font.pixelSize: 10; color: "#3a4a6a"
+                            font.pixelSize: 10; color: "#888888"
                             font.family: "JetBrains Mono, Fira Mono, monospace"
                         }
                     }
@@ -406,7 +390,7 @@ ShellRoot {
                     Rectangle {
                         width: 8; height: 8; radius: 4
                         anchors.verticalCenter: parent.verticalCenter
-                        color: isRunning ? "#39ff7a" : "#2a3050"
+                        color: isRunning ? "#0066ff" : "#333333"
                         SequentialAnimation on opacity {
                             running: isRunning; loops: Animation.Infinite
                             NumberAnimation { to: 0.3; duration: 600 }
@@ -419,7 +403,7 @@ ShellRoot {
                         font.pixelSize: 10
                         font.family: "JetBrains Mono, Fira Mono, monospace"
                         font.weight: 500
-                        color: isRunning ? "#39ff7a" : "#2a3050"
+                        color: isRunning ? "#0066ff" : "#555555"
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
                 }
@@ -434,22 +418,22 @@ ShellRoot {
                 Rectangle {
                     height: 46
                     width: parent.width - runSelectedBtn.width - fullAuditBtn.width - statusBtn.width - 40
-                    radius: 10
-                    color: "#0e101a"
-                    border.color: targetInput.activeFocus ? "#2a3a7a" : "#1a2040"
-                    border.width: targetInput.activeFocus ? 1.5 : 1
+                    radius: 6
+                    color: "#0a0a0a"
+                    border.color: targetInput.activeFocus ? "#0066ff" : "#222222"
+                    border.width: 1
                     Behavior on border.color { ColorAnimation { duration: 150 } }
 
                     Row {
                         anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; leftMargin: 14; rightMargin: 14 }
                         spacing: 8
-                        Text { text: "▶"; font.pixelSize: 10; color: "#3a4a6a"; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "▶"; font.pixelSize: 10; color: "#555555"; anchors.verticalCenter: parent.verticalCenter }
                         TextInput {
                             id: targetInput
                             width: parent.width - 24
                             font.pixelSize: 13
                             font.family: "JetBrains Mono, Fira Mono, monospace"
-                            color: "#c8d8f8"; selectionColor: "#2a3a7a"
+                            color: "#ffffff"; selectionColor: "#0066ff"
                             text: target
                             onTextChanged: target = text
                             Keys.onReturnPressed: {
@@ -459,7 +443,7 @@ ShellRoot {
                             Text {
                                 visible: targetInput.text.length === 0
                                 text: "Enter target: IP address, domain, URL, or username…"
-                                font: targetInput.font; color: "#2a3050"
+                                font: targetInput.font; color: "#444444"
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                         }
@@ -469,15 +453,15 @@ ShellRoot {
                 // Run Selected
                 Rectangle {
                     id: runSelectedBtn
-                    height: 46; width: 140; radius: 10
-                    color: runSelectedHover.containsMouse && !isRunning ? "#1a2a6a" : "#111a4a"
-                    border.color: isRunning ? "#1a2040" : "#2a3a8a"; border.width: 1
+                    height: 46; width: 140; radius: 6
+                    color: runSelectedHover.containsMouse && !isRunning ? "#0066ff" : "#0047b3"
+                    border.color: "transparent"; border.width: 0
                     opacity: isRunning ? 0.5 : 1
                     Behavior on color { ColorAnimation { duration: 120 } }
                     Column {
                         anchors.centerIn: parent; spacing: 2
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Run Selected"; font.pixelSize: 12; font.weight: 600; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#5b8fff" }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Ctrl+Enter"; font.pixelSize: 9; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#2a3a6a" }
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Run Selected"; font.pixelSize: 12; font.weight: 600; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#ffffff" }
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Ctrl+Enter"; font.pixelSize: 9; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#bbccff" }
                     }
                     MouseArea {
                         id: runSelectedHover; anchors.fill: parent; hoverEnabled: true
@@ -489,15 +473,15 @@ ShellRoot {
                 // Full Audit
                 Rectangle {
                     id: fullAuditBtn
-                    height: 46; width: 130; radius: 10
-                    color: fullAuditHover.containsMouse && !isRunning ? "#1a2a1a" : "#0e1a0e"
-                    border.color: isRunning ? "#1a2a1a" : "#2a5a2a"; border.width: 1
+                    height: 46; width: 130; radius: 6
+                    color: fullAuditHover.containsMouse && !isRunning ? "#111111" : "#0a0a0a"
+                    border.color: isRunning ? "#111" : "#222222"; border.width: 1
                     opacity: isRunning ? 0.5 : 1
                     Behavior on color { ColorAnimation { duration: 120 } }
                     Column {
                         anchors.centerIn: parent; spacing: 2
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Full Audit"; font.pixelSize: 12; font.weight: 600; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#39ff7a" }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "All tools"; font.pixelSize: 9; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#1a4a2a" }
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Full Audit"; font.pixelSize: 12; font.weight: 600; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#0066ff" }
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "All tools"; font.pixelSize: 9; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#555555" }
                     }
                     MouseArea {
                         id: fullAuditHover; anchors.fill: parent; hoverEnabled: true
@@ -509,14 +493,14 @@ ShellRoot {
                 // Status
                 Rectangle {
                     id: statusBtn
-                    height: 46; width: 90; radius: 10
-                    color: statusHover.containsMouse ? "#0e1020" : "#090a14"
-                    border.color: "#1a2040"; border.width: 1
+                    height: 46; width: 90; radius: 6
+                    color: statusHover.containsMouse ? "#111111" : "#0a0a0a"
+                    border.color: "#222222"; border.width: 1
                     Behavior on color { ColorAnimation { duration: 120 } }
                     Column {
                         anchors.centerIn: parent; spacing: 2
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Status"; font.pixelSize: 12; font.weight: 600; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#667" }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "check tools"; font.pixelSize: 9; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#334" }
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Status"; font.pixelSize: 12; font.weight: 600; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#888888" }
+                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "check tools"; font.pixelSize: 9; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#555555" }
                     }
                     MouseArea {
                         id: statusHover; anchors.fill: parent; hoverEnabled: true
@@ -540,9 +524,9 @@ ShellRoot {
 
                     Row {
                         spacing: 8
-                        Text { text: "TOOLS"; font.pixelSize: 10; font.weight: 700; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#2a3a5a"; font.letterSpacing: 2 }
-                        Rectangle { width: 1; height: 12; color: "#1a2040"; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: enabledTools().length + " selected"; font.pixelSize: 10; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#3a4a6a" }
+                        Text { text: "TOOLS"; font.pixelSize: 10; font.weight: 700; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#444444"; font.letterSpacing: 2 }
+                        Rectangle { width: 1; height: 12; color: "#222222"; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: enabledTools().length + " selected"; font.pixelSize: 10; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#666666" }
                     }
 
                     ScrollView {
@@ -552,7 +536,7 @@ ShellRoot {
                         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
                         ScrollBar.vertical: ScrollBar {
                             policy: ScrollBar.AsNeeded
-                            contentItem: Rectangle { implicitWidth: 3; radius: 2; color: "#1a2040" }
+                            contentItem: Rectangle { implicitWidth: 3; radius: 2; color: "#222222" }
                         }
 
                         Column {
@@ -568,9 +552,9 @@ ShellRoot {
 
                                     // Category Folder Header
                                     Rectangle {
-                                        width: 220; height: 32; radius: 6
-                                        color: catHover.containsMouse ? "#1a1c29" : "#12141e"
-                                        border.color: "#1e2233"; border.width: 1
+                                        width: 220; height: 32; radius: 4
+                                        color: catHover.containsMouse ? "#111111" : "#0a0a0a"
+                                        border.color: "transparent"; border.width: 0
                                         Behavior on color { ColorAnimation { duration: 150 } }
                                         
                                         Row {
@@ -578,13 +562,13 @@ ShellRoot {
                                             spacing: 8
                                             Text {
                                                 text: expandedCategories[categoryName] ? "▼" : "▶"
-                                                color: "#5b8fff"
+                                                color: "#0066ff"
                                                 font.pixelSize: 9
                                                 anchors.verticalCenter: parent.verticalCenter
                                             }
                                             Text {
                                                 text: categoryName
-                                                font.weight: 600; color: "#d8e8ff"; font.pixelSize: 11
+                                                font.weight: 600; color: "#ffffff"; font.pixelSize: 11
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 font.family: "JetBrains Mono, Fira Mono, monospace"
                                                 font.letterSpacing: 0.5
@@ -649,10 +633,10 @@ ShellRoot {
                                 Repeater {
                                     model: [["All", true], ["None", false]]
                                     Rectangle {
-                                        width: 100; height: 28; radius: 6
-                                        color: selHover.containsMouse ? "#1a2040" : "#0e1020"
-                                        border.color: "#1a2040"; border.width: 1
-                                        Text { anchors.centerIn: parent; text: modelData[0]; font.pixelSize: 10; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#3a4a6a" }
+                                        width: 100; height: 28; radius: 4
+                                        color: selHover.containsMouse ? "#111111" : "#0a0a0a"
+                                        border.color: "#222222"; border.width: 1
+                                        Text { anchors.centerIn: parent; text: modelData[0]; font.pixelSize: 10; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#888888" }
                                         MouseArea {
                                             id: selHover; anchors.fill: parent; hoverEnabled: true
                                             cursorShape: Qt.PointingHandCursor
@@ -681,9 +665,9 @@ ShellRoot {
                         Repeater {
                             model: [["console", "Console"], ["report", "Report"]]
                             Rectangle {
-                                width: 100; height: 28; radius: 7
-                                color: activeTab === modelData[0] ? "#1a2050" : "#0e1020"
-                                border.color: activeTab === modelData[0] ? "#2a3a8a" : "#1a2040"
+                                width: 100; height: 28; radius: 4
+                                color: activeTab === modelData[0] ? "#111111" : "#0a0a0a"
+                                border.color: activeTab === modelData[0] ? "#0066ff" : "#222222"
                                 border.width: 1
                                 Behavior on color { ColorAnimation { duration: 150 } }
                                 Text {
@@ -691,7 +675,7 @@ ShellRoot {
                                     font.pixelSize: 11
                                     font.weight: activeTab === modelData[0] ? 600 : 400
                                     font.family: "JetBrains Mono, Fira Mono, monospace"
-                                    color: activeTab === modelData[0] ? "#5b8fff" : "#3a4a6a"
+                                    color: activeTab === modelData[0] ? "#0066ff" : "#666666"
                                     Behavior on color { ColorAnimation { duration: 150 } }
                                 }
                                 MouseArea {
