@@ -4,13 +4,13 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "🔷 AuditX — Security Audit Platform"
+echo " AuditX — Security Audit Platform"
 echo "   Launching Quickshell app..."
 echo ""
 
 # Optional: check python3
 if ! command -v python3 &>/dev/null; then
-    echo "❌ python3 not found. Please install Python 3."
+    echo "python3 not found. Please install Python 3."
     exit 1
 fi
 
