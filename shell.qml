@@ -82,6 +82,9 @@ ShellRoot {
         "gitleaks":     true
     })
 
+    property var categories: ["OSINT", "Network", "Web", "Vulnerability", "Exploit/Audit"]
+    property var expandedCategories: ({ "OSINT": true, "Network": true, "Web": true, "Vulnerability": true, "Exploit/Audit": true })
+
     // Resolve backend path once at startup — avoids URL-encoding issues with Qt.resolvedUrl
     property string backendPath: ""
 
@@ -557,28 +560,80 @@ ShellRoot {
                             spacing: 8
 
                             Repeater {
-                                model: toolMeta
-                                ToolCard {
+                                model: categories
+                                Column {
                                     width: 220
-                                    toolName:    modelData.id
-                                    displayName: modelData.display
-                                    category:    modelData.category
-                                    description: modelData.description
-                                    isEnabled:   toolEnabled[modelData.id] || false
-                                    // Bind to toolStatusModel count so binding re-evaluates on every update
-                                    isInstalled: {
-                                        // Reference toolStatusModel.count to make this binding reactive
-                                        var _dep = toolStatusModel.count
-                                        return toolIsInstalled(modelData.id)
-                                    }
-                                    isRunning:   (toolRunState && toolRunState[modelData.id] === "running")
-                                    isDone:      (toolRunState && toolRunState[modelData.id] === "done")
-                                    hasFailed:   (toolRunState && toolRunState[modelData.id] === "failed")
+                                    spacing: 4
+                                    property string categoryName: modelData
 
-                                    onToggled: function(enabled) {
-                                        var s = Object.assign({}, toolEnabled)
-                                        s[modelData.id] = enabled
-                                        toolEnabled = s
+                                    // Category Folder Header
+                                    Rectangle {
+                                        width: 220; height: 32; radius: 6
+                                        color: catHover.containsMouse ? "#1a1c29" : "#12141e"
+                                        border.color: "#1e2233"; border.width: 1
+                                        Behavior on color { ColorAnimation { duration: 150 } }
+                                        
+                                        Row {
+                                            anchors { fill: parent; leftMargin: 12; rightMargin: 12 }
+                                            spacing: 8
+                                            Text {
+                                                text: expandedCategories[categoryName] ? "▼" : "▶"
+                                                color: "#5b8fff"
+                                                font.pixelSize: 9
+                                                anchors.verticalCenter: parent.verticalCenter
+                                            }
+                                            Text {
+                                                text: categoryName
+                                                font.weight: 600; color: "#d8e8ff"; font.pixelSize: 11
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                font.family: "JetBrains Mono, Fira Mono, monospace"
+                                                letterSpacing: 0.5
+                                            }
+                                        }
+                                        MouseArea {
+                                            id: catHover
+                                            anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                                            hoverEnabled: true
+                                            onClicked: {
+                                                var s = Object.assign({}, expandedCategories)
+                                                s[categoryName] = !s[categoryName]
+                                                expandedCategories = s
+                                            }
+                                        }
+                                    }
+
+                                    // Tools inside category
+                                    Column {
+                                        width: 220
+                                        spacing: 6
+                                        visible: expandedCategories[categoryName]
+                                        
+                                        Repeater {
+                                            // .filter is standard JS and supported in QML's V4 engine
+                                            model: toolMeta.filter(function(t) { return t.category === categoryName })
+                                            
+                                            ToolCard {
+                                                width: 220
+                                                toolName:    modelData.id
+                                                displayName: modelData.display
+                                                category:    modelData.category
+                                                description: modelData.description
+                                                isEnabled:   toolEnabled[modelData.id] || false
+                                                isInstalled: {
+                                                    var _dep = toolStatusModel.count
+                                                    return toolIsInstalled(modelData.id)
+                                                }
+                                                isRunning:   (toolRunState && toolRunState[modelData.id] === "running")
+                                                isDone:      (toolRunState && toolRunState[modelData.id] === "done")
+                                                hasFailed:   (toolRunState && toolRunState[modelData.id] === "failed")
+
+                                                onToggled: function(enabled) {
+                                                    var s = Object.assign({}, toolEnabled)
+                                                    s[modelData.id] = enabled
+                                                    toolEnabled = s
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
