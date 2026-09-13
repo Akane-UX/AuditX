@@ -1,4 +1,4 @@
-# 🛡️ AuditX — Security Audit Platform
+# AuditX - Security Audit Platform
 
 > **NOTE:** This project is currently in the **PROTOTYPE** phase. It is actively being developed and may contain bugs or incomplete features. Use with caution and only on authorized targets.
 
