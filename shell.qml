@@ -587,7 +587,7 @@ ShellRoot {
                                                 font.weight: 600; color: "#d8e8ff"; font.pixelSize: 11
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 font.family: "JetBrains Mono, Fira Mono, monospace"
-                                                letterSpacing: 0.5
+                                                font.letterSpacing: 0.5
                                             }
                                         }
                                         MouseArea {
