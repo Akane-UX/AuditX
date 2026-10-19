@@ -7,9 +7,18 @@ import "components"
 
 // ─── AuditX — Security Audit Tool (Quickshell / QML) ─────────────────────────
 ShellRoot {
+    id: root
 
     // ── State ──────────────────────────────────────────────────────────────────
-    property string target: ""
+    property string targetIp: ""
+    property string targetDomain: ""
+    property string targetUrl: ""
+    property string targetCloud: ""
+    property string targetPath: ""
+    property string targetUsername: ""
+    property string targetInterface: ""
+
+    property string target: (targetIp || targetDomain || targetUrl || targetCloud || targetPath || targetUsername || targetInterface || "")
     property bool   isRunning: false
     property string activeTab: "console"   // "console" | "report"
     property var    toolRunState: ({})      // tool -> "idle" | "running" | "done" | "failed"
@@ -43,23 +52,37 @@ ShellRoot {
     }
 
     property var toolMeta: [
-        { id: "sherlock",     display: "Sherlock",      category: "OSINT",   description: "Username search across hundreds of platforms" },
-        { id: "theharvester", display: "theHarvester",  category: "OSINT",   description: "Email, subdomain & IP harvesting" },
-        { id: "sublist3r",    display: "Sublist3r",     category: "OSINT",   description: "Fast subdomain enumeration" },
-        { id: "nmap",         display: "Nmap",          category: "Network", description: "Port scanning & service detection" },
-        { id: "rustscan",     display: "RustScan",      category: "Network", description: "Ultra-fast port scanner" },
-        { id: "nikto",        display: "Nikto",         category: "Web",     description: "Web server vulnerability scanner" },
-        { id: "whatweb",      display: "WhatWeb",       category: "Web",           description: "Web technology fingerprinting" },
-        { id: "sqlmap",       display: "SQLMap",        category: "Web",           description: "SQL injection detection & exploitation" },
-        { id: "metasploit",   display: "Metasploit Aux", category: "Network",       description: "MSF service & SMB fingerprinting scanner" },
-        { id: "msf_rpc",      display: "Metasploit RPC", category: "Exploit/Audit", description: "MSF RPC API orchestrator via msfrpcd" },
-        { id: "msfvenom",     display: "Msfvenom",      category: "Exploit/Audit", description: "Generate Linux meterpreter reverse TCP payload" },
-        { id: "msf_listener", display: "MSF Listener",  category: "Exploit/Audit", description: "Start reverse TCP handler (linux/x64/meterpreter)" },
-        { id: "nuclei",       display: "Nuclei",        category: "Vulnerability", description: "Fast template-based vulnerability scanner" },
-        { id: "gobuster",     display: "Gobuster",      category: "Web",           description: "Directory and file fuzzing tool" },
-        { id: "netexec",      display: "NetExec",       category: "Network",       description: "AD / SMB environment pentesting tool" },
-        { id: "enum4linux-ng", display: "Enum4Linux-NG", category: "Network",      description: "Windows / Samba enumeration tool" },
-        { id: "gitleaks",     display: "Gitleaks",      category: "OSINT",         description: "Detect secrets and passwords in repositories" }
+        { id: "sherlock",      display: "Sherlock",       category: "OSINT",         inputType: "user",      description: "Username search across hundreds of platforms" },
+        { id: "theharvester",  display: "theHarvester",   category: "OSINT",         inputType: "domain",    description: "Email, subdomain & IP harvesting" },
+        { id: "sublist3r",     display: "Sublist3r",      category: "OSINT",         inputType: "domain",    description: "Fast subdomain enumeration" },
+        { id: "nmap",          display: "Nmap",           category: "Network",       inputType: "ip",        description: "Port scanning & service detection" },
+        { id: "rustscan",      display: "RustScan",       category: "Network",       inputType: "ip",        description: "Ultra-fast port scanner" },
+        { id: "nikto",         display: "Nikto",          category: "Web",           inputType: "url",       description: "Web server vulnerability scanner" },
+        { id: "whatweb",       display: "WhatWeb",        category: "Web",           inputType: "url",       description: "Web technology fingerprinting" },
+        { id: "sqlmap",        display: "SQLMap",         category: "Web",           inputType: "url",       description: "SQL injection detection & exploitation" },
+        { id: "metasploit",    display: "Metasploit Aux", category: "Network",       inputType: "ip",        description: "MSF service & SMB fingerprinting scanner" },
+        { id: "msf_rpc",       display: "Metasploit RPC", category: "Exploit/Audit", inputType: "ip",        description: "MSF RPC API orchestrator via msfrpcd" },
+        { id: "msfvenom",      display: "Msfvenom",       category: "Exploit/Audit", inputType: "ip",        description: "Generate Linux meterpreter reverse TCP payload" },
+        { id: "msf_listener",  display: "MSF Listener",   category: "Exploit/Audit", inputType: "ip",        description: "Start reverse TCP handler (linux/x64/meterpreter)" },
+        { id: "nuclei",        display: "Nuclei",         category: "Vulnerability", inputType: "url",       description: "Fast template-based vulnerability scanner" },
+        { id: "gobuster",      display: "Gobuster",       category: "Web",           inputType: "url",       description: "Directory and file fuzzing tool" },
+        { id: "netexec",       display: "NetExec",        category: "Network",       inputType: "ip",        description: "AD / SMB environment pentesting tool" },
+        { id: "enum4linux-ng", display: "Enum4Linux-NG",  category: "Network",       inputType: "ip",        description: "Windows / Samba enumeration tool" },
+        { id: "gitleaks",      display: "Gitleaks",       category: "OSINT",         inputType: "path",      description: "Detect secrets and passwords in repositories" },
+        { id: "scoutsuite",    display: "ScoutSuite",     category: "Cloud",         inputType: "cloud",     description: "Multi-cloud security posture assessment" },
+        { id: "prowler",       display: "Prowler",        category: "Cloud",         inputType: "cloud",     description: "Cloud security & CIS compliance benchmarks" },
+        { id: "pacu",          display: "Pacu",           category: "Cloud",         inputType: "cloud",     description: "AWS cloud exploitation & auditing framework" },
+        { id: "trivy",         display: "Trivy Cloud",    category: "Cloud",         inputType: "cloud",     description: "Cloud & IaC scanner for AWS, K8s, Terraform" },
+        { id: "checkov",       display: "Checkov",        category: "Cloud",         inputType: "path",      description: "Static code analysis for IaC & cloud configs" },
+        { id: "aircrack-ng",   display: "Aircrack-ng",    category: "Wireless",      inputType: "path",      description: "802.11 WEP/WPA/WPA2 key cracker from handshake captures" },
+        { id: "airodump-ng",   display: "Airodump-ng",    category: "Wireless",      inputType: "interface", description: "Packet sniffer & live wireless network monitor" },
+        { id: "airmon-ng",     display: "Airmon-ng",      category: "Wireless",      inputType: "interface", description: "Manage wireless card monitor mode & check processes" },
+        { id: "wifite",        display: "Wifite",         category: "Wireless",      inputType: "interface", description: "Automated wireless auditor (attacks WEP/WPA/PMKID)" },
+        { id: "kismet",        display: "Kismet",         category: "Wireless",      inputType: "interface", description: "Wireless network detector, sniffer & wardriving IDS" },
+        { id: "jadx",          display: "Jadx Decompiler", category: "Reverse Eng",  inputType: "path",      description: "Dex to Java decompiler and APK source extractor" },
+        { id: "apktool",       display: "Apktool",         category: "Reverse Eng",  inputType: "path",      description: "Disassemble Android APK resources, manifest & smali" },
+        { id: "binwalk",       display: "Binwalk",         category: "Reverse Eng",  inputType: "path",      description: "Firmware analysis tool & embedded signature scanner" },
+        { id: "radare2",       display: "Radare2 (r2)",    category: "Reverse Eng",  inputType: "path",      description: "UNIX-like RE framework (binary headers, symbols, strings)" }
     ]
 
     property var toolEnabled: ({
@@ -79,11 +102,25 @@ ShellRoot {
         "gobuster":     true,
         "netexec":      true,
         "enum4linux-ng": true,
-        "gitleaks":     true
+        "gitleaks":     true,
+        "scoutsuite":   true,
+        "prowler":      true,
+        "pacu":         true,
+        "trivy":        true,
+        "checkov":      true,
+        "aircrack-ng":  true,
+        "airodump-ng":  true,
+        "airmon-ng":    true,
+        "wifite":       true,
+        "kismet":       true,
+        "jadx":         true,
+        "apktool":      true,
+        "binwalk":      true,
+        "radare2":      true
     })
 
-    property var categories: ["OSINT", "Network", "Web", "Vulnerability", "Exploit/Audit"]
-    property var expandedCategories: ({ "OSINT": true, "Network": true, "Web": true, "Vulnerability": true, "Exploit/Audit": true })
+    property var categories: ["OSINT", "Network", "Web", "Vulnerability", "Cloud", "Wireless", "Reverse Eng", "Exploit/Audit"]
+    property var expandedCategories: ({ "OSINT": false, "Network": false, "Web": false, "Vulnerability": false, "Cloud": false, "Wireless": false, "Reverse Eng": false, "Exploit/Audit": false })
 
     // Resolve backend path once at startup — avoids URL-encoding issues with Qt.resolvedUrl
     property string backendPath: ""
@@ -186,6 +223,8 @@ ShellRoot {
 
         case "tool_start":
             consoleView.currentTool = ev.tool
+            consoleView.addTab(ev.tool, displayFor(ev.tool))
+            consoleView.setTabStatus(ev.tool, "running")
             consoleView.info("Starting " + ev.tool + "…")
             setToolState(ev.tool, "running")
             reportView.addResult(ev.tool, displayFor(ev.tool), "running", [])
@@ -200,6 +239,7 @@ ShellRoot {
         case "tool_done":
             var ok = (ev.exit_code === 0)
             consoleView.currentTool = ""
+            consoleView.setTabStatus(ev.tool, ok ? "done" : "failed")
             if (ok) {
                 consoleView.success(ev.tool + " finished successfully.")
                 setToolState(ev.tool, "done")
@@ -213,6 +253,7 @@ ShellRoot {
 
         case "tool_error":
             consoleView.error("[" + ev.tool + "] " + ev.message)
+            consoleView.setTabStatus(ev.tool, "failed")
             setToolState(ev.tool, "failed")
             reportView.updateStatus(ev.tool, "failed")
             break
@@ -270,10 +311,72 @@ ShellRoot {
         return toolMeta.filter(function(t) { return toolEnabled[t.id] }).map(function(t) { return t.id })
     }
 
+    function hasAnyTarget() {
+        return (targetIp.trim() !== "" ||
+                targetDomain.trim() !== "" ||
+                targetUrl.trim() !== "" ||
+                targetCloud.trim() !== "" ||
+                targetPath.trim() !== "" ||
+                targetUsername.trim() !== "" ||
+                targetInterface.trim() !== "")
+    }
+
+    function getPrimaryTarget() {
+        if (targetIp.trim()) return targetIp.trim()
+        if (targetDomain.trim()) return targetDomain.trim()
+        if (targetUrl.trim()) return targetUrl.trim()
+        if (targetCloud.trim()) return targetCloud.trim()
+        if (targetPath.trim()) return targetPath.trim()
+        if (targetUsername.trim()) return targetUsername.trim()
+        if (targetInterface.trim()) return targetInterface.trim()
+        return ""
+    }
+
+    function targetForTool(toolId) {
+        for (var i = 0; i < toolMeta.length; i++) {
+            if (toolMeta[i].id === toolId) {
+                var itype = (toolMeta[i].inputType || "ip").toLowerCase()
+                if (itype === "ip" && targetIp.trim()) return targetIp.trim()
+                if (itype === "domain" && targetDomain.trim()) return targetDomain.trim()
+                if (itype === "url" && targetUrl.trim()) return targetUrl.trim()
+                if (itype === "cloud" && targetCloud.trim()) return targetCloud.trim()
+                if (itype === "path" && targetPath.trim()) return targetPath.trim()
+                if (itype === "user" || itype === "username") {
+                    if (targetUsername.trim()) return targetUsername.trim()
+                }
+                if (itype === "interface" || itype === "wlan") {
+                    if (targetInterface.trim()) return targetInterface.trim()
+                    return "wlp0s20f3"
+                }
+
+                // Fallbacks
+                if (itype === "url") {
+                    if (targetDomain.trim()) return "https://" + targetDomain.trim()
+                    if (targetIp.trim()) return "http://" + targetIp.trim()
+                }
+                if (itype === "domain") {
+                    if (targetUrl.trim()) {
+                        var clean = targetUrl.trim().replace(/^https?:\/\//i, '').split('/')[0].split(':')[0]
+                        if (clean) return clean
+                    }
+                    if (targetIp.trim()) return targetIp.trim()
+                }
+                if (itype === "ip") {
+                    if (targetDomain.trim()) return targetDomain.trim()
+                }
+                if (itype === "cloud") return "aws"
+                if (itype === "path") return "."
+                if (itype === "interface") return "wlp0s20f3"
+                break
+            }
+        }
+        return getPrimaryTarget()
+    }
+
     // ── Actions ────────────────────────────────────────────────────────────────
     function runSelectedTools(toolIds) {
-        if (!target.trim()) {
-            consoleView.error("Please enter a target first.")
+        if (!hasAnyTarget()) {
+            consoleView.error("Please enter a target (IP, Domain, URL, Cloud, Path, Username, or Interface).")
             return
         }
         if (isRunning) {
@@ -289,17 +392,34 @@ ShellRoot {
         toolRunState = {}
         toolLines    = {}
         reportView.clear()
+        consoleView.resetTabs()
 
-        consoleView.system("Launching: " + toolIds.join(", "))
+        var targetsObj = {
+            "ip": targetIp.trim(),
+            "domain": targetDomain.trim(),
+            "url": targetUrl.trim(),
+            "cloud": targetCloud.trim(),
+            "path": targetPath.trim(),
+            "username": targetUsername.trim(),
+            "interface": targetInterface.trim()
+        }
+        var primary = getPrimaryTarget()
 
-        var cmd = ["python3", backendPath, "audit", target.trim(), "--tools"]
+        consoleView.system("Launching: " + toolIds.join(", ") + " (Primary Target: " + primary + ")")
+
+        var cmd = [
+            "python3", backendPath, "audit", primary,
+            "--targets", JSON.stringify(targetsObj),
+            "--tools"
+        ]
         backendProcess.command = cmd.concat(toolIds)
         backendProcess.running = true
     }
 
     function runSingleTool(toolId) {
-        if (!target.trim()) {
-            consoleView.error("Please enter a target first.")
+        var specificTarget = targetForTool(toolId)
+        if (!specificTarget) {
+            consoleView.error("Please enter a target for " + toolId + ".")
             return
         }
         if (isRunning) {
@@ -311,8 +431,12 @@ ShellRoot {
         toolRunState = {}
         toolLines    = {}
         reportView.clear()
+        consoleView.resetTabs()
+        consoleView.addTab(toolId, displayFor(toolId))
 
-        var cmd = ["python3", backendPath, "run", toolId, target.trim()]
+        consoleView.system("Launching " + toolId + " on " + specificTarget)
+
+        var cmd = ["python3", backendPath, "run", toolId, specificTarget]
         backendProcess.command = cmd
         backendProcess.running = true
     }
@@ -409,111 +533,46 @@ ShellRoot {
                 }
             }
 
-            // ── Target input + action buttons
-            Row {
+            // ── Target Configuration Bar (Multi-Type Input)
+            TargetBar {
+                id: targetBar
                 width: parent.width
-                height: 46
-                spacing: 10
+                targetIp: root.targetIp
+                targetDomain: root.targetDomain
+                targetUrl: root.targetUrl
+                targetCloud: root.targetCloud
+                targetPath: root.targetPath
+                targetUsername: root.targetUsername
+                targetInterface: root.targetInterface
+                isRunning: root.isRunning
 
-                Rectangle {
-                    height: 46
-                    width: parent.width - runSelectedBtn.width - fullAuditBtn.width - statusBtn.width - 40
-                    radius: 6
-                    color: "#0a0a0a"
-                    border.color: targetInput.activeFocus ? "#0066ff" : "#222222"
-                    border.width: 1
-                    Behavior on border.color { ColorAnimation { duration: 150 } }
+                onTargetIpChanged: root.targetIp = targetIp
+                onTargetDomainChanged: root.targetDomain = targetDomain
+                onTargetUrlChanged: root.targetUrl = targetUrl
+                onTargetCloudChanged: root.targetCloud = targetCloud
+                onTargetPathChanged: root.targetPath = targetPath
+                onTargetUsernameChanged: root.targetUsername = targetUsername
+                onTargetInterfaceChanged: root.targetInterface = targetInterface
 
-                    Row {
-                        anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; leftMargin: 14; rightMargin: 14 }
-                        spacing: 8
-                        Text { text: "▶"; font.pixelSize: 10; color: "#555555"; anchors.verticalCenter: parent.verticalCenter }
-                        TextInput {
-                            id: targetInput
-                            width: parent.width - 24
-                            font.pixelSize: 13
-                            font.family: "JetBrains Mono, Fira Mono, monospace"
-                            color: "#ffffff"; selectionColor: "#0066ff"
-                            text: target
-                            onTextChanged: target = text
-                            Keys.onReturnPressed: {
-                                if (event.modifiers & Qt.ControlModifier)
-                                    runSelectedTools(enabledTools())
-                            }
-                            Text {
-                                visible: targetInput.text.length === 0
-                                text: "Enter target: IP address, domain, URL, or username…"
-                                font: targetInput.font; color: "#444444"
-                                anchors.verticalCenter: parent.verticalCenter
-                            }
-                        }
-                    }
+                onRunSelectedRequested: {
+                    activeTab = "console"
+                    runSelectedTools(enabledTools())
                 }
 
-                // Run Selected
-                Rectangle {
-                    id: runSelectedBtn
-                    height: 46; width: 140; radius: 6
-                    color: runSelectedHover.containsMouse && !isRunning ? "#0066ff" : "#0047b3"
-                    border.color: "transparent"; border.width: 0
-                    opacity: isRunning ? 0.5 : 1
-                    Behavior on color { ColorAnimation { duration: 120 } }
-                    Column {
-                        anchors.centerIn: parent; spacing: 2
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Run Selected"; font.pixelSize: 12; font.weight: 600; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#ffffff" }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Ctrl+Enter"; font.pixelSize: 9; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#bbccff" }
-                    }
-                    MouseArea {
-                        id: runSelectedHover; anchors.fill: parent; hoverEnabled: true
-                        cursorShape: isRunning ? Qt.ArrowCursor : Qt.PointingHandCursor
-                        onClicked: { if (!isRunning) { activeTab = "console"; runSelectedTools(enabledTools()) } }
-                    }
+                onFullAuditRequested: {
+                    activeTab = "console"
+                    runSelectedTools(toolMeta.map(function(t) { return t.id }))
                 }
 
-                // Full Audit
-                Rectangle {
-                    id: fullAuditBtn
-                    height: 46; width: 130; radius: 6
-                    color: fullAuditHover.containsMouse && !isRunning ? "#111111" : "#0a0a0a"
-                    border.color: isRunning ? "#111" : "#222222"; border.width: 1
-                    opacity: isRunning ? 0.5 : 1
-                    Behavior on color { ColorAnimation { duration: 120 } }
-                    Column {
-                        anchors.centerIn: parent; spacing: 2
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Full Audit"; font.pixelSize: 12; font.weight: 600; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#0066ff" }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "All tools"; font.pixelSize: 9; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#555555" }
-                    }
-                    MouseArea {
-                        id: fullAuditHover; anchors.fill: parent; hoverEnabled: true
-                        cursorShape: isRunning ? Qt.ArrowCursor : Qt.PointingHandCursor
-                        onClicked: { if (!isRunning) { activeTab = "console"; runSelectedTools(toolMeta.map(function(t) { return t.id })) } }
-                    }
-                }
-
-                // Status
-                Rectangle {
-                    id: statusBtn
-                    height: 46; width: 90; radius: 6
-                    color: statusHover.containsMouse ? "#111111" : "#0a0a0a"
-                    border.color: "#222222"; border.width: 1
-                    Behavior on color { ColorAnimation { duration: 120 } }
-                    Column {
-                        anchors.centerIn: parent; spacing: 2
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Status"; font.pixelSize: 12; font.weight: 600; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#888888" }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "check tools"; font.pixelSize: 9; font.family: "JetBrains Mono, Fira Mono, monospace"; color: "#555555" }
-                    }
-                    MouseArea {
-                        id: statusHover; anchors.fill: parent; hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: checkStatus()
-                    }
+                onCheckStatusRequested: {
+                    checkStatus()
                 }
             }
 
             // ── Main content area
             Row {
                 width: parent.width
-                height: parent.height - 42 - 46 - 28
+                height: parent.height - 42 - targetBar.height - 28
                 spacing: 14
 
                 // ── Left: Tool selection panel
@@ -602,6 +661,7 @@ ShellRoot {
                                                 displayName: modelData.display
                                                 category:    modelData.category
                                                 description: modelData.description
+                                                inputType:   modelData.inputType || ""
                                                 isEnabled:   toolEnabled[modelData.id] || false
                                                 isInstalled: {
                                                     var _dep = toolStatusModel.count

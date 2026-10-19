@@ -10,19 +10,24 @@ auditx/
 ├── backend/
 │   └── audit.py          # Python orchestrator & backend script
 ├── components/
-│   ├── ConsoleView.qml   # Live output terminal component
-│   ├── ReportView.qml    # Structured report summary component
+│   ├── ConsoleView.qml   # Multi-tab live output terminal component
+│   ├── ExportModal.qml   # Interactive file destination & format picker modal
+│   ├── ReportView.qml    # Structured report summary & deterministic summarizer
+│   ├── TargetBar.qml     # Dynamic multi-target selector & segmented input bar
 │   └── ToolCard.qml      # Selectable tool configuration cards
 ├── launch.sh             # Main application startup script
 └── shell.qml             # Main entry point & Quickshell orchestrator
 ```
 
-## Integrated CLI Tools
+## Integrated CLI Tools (31 Tools)
 - **Vulnerability**: `nuclei`
 - **Web Security**: `nikto`, `whatweb`, `sqlmap`, `gobuster`
 - **Network & Active Directory**: `nmap`, `rustscan`, `netexec`, `enum4linux-ng`
 - **Exploit & Framework**: `metasploit` (`msfconsole`, `msfvenom`, `msfrpcd`)
 - **OSINT & Secrets**: `sherlock`, `theHarvester`, `sublist3r`, `gitleaks`
+- **Cloud Security**: `scoutsuite`, `prowler`, `pacu`, `trivy`, `checkov`
+- **Wireless Security**: `aircrack-ng`, `airodump-ng`, `airmon-ng`, `wifite`, `kismet`
+- **Reverse Engineering**: `jadx`, `apktool`, `binwalk`, `radare2`
 
 ## Requirements & Manual Installation Guide
 
@@ -55,6 +60,9 @@ sudo pacman -S metasploit
 
 # OSINT & Vulnerability Scanners
 sudo pacman -S nuclei gitleaks
+
+# Wireless & Reverse Engineering
+sudo pacman -S aircrack-ng kismet binwalk radare2
 ```
 *Make sure to initialize tools like nuclei (`nuclei -update-templates`) and metasploit (`msfdb init`) before first use.*
 
@@ -71,9 +79,10 @@ sudo pacman -S nuclei gitleaks
    ```
 
 ## Features
-- **Auto-Detection**: On boot, the app checks if integrated tools are installed.
-- **Auto-Installation**: If a tool is missing, the backend will attempt to automatically pull and install it before running (e.g. using `pip3` or `pacman`). *(Prototype)*
+- **Auto-Detection**: On boot, the app checks if integrated tools are installed across all 8 security categories.
+- **Auto-Installation**: If a tool is missing, the backend can attempt to pull and install it in user-space or system.
+- **Multi-Target Routing**: Dedicated target inputs for IP/Subnet, Domain, URL, Cloud Provider, Local Path, Username, and Wireless Interface.
+- **Deterministic Rule-Based Summarizer**: Zero-latency local heuristics that extract open ports, CVEs, cloud misconfigurations, exposed credentials, and generate hardening recommendations.
+- **Multi-Tab Terminal Console**: Switch between global output stream and isolated per-tool live log tabs.
+- **Comprehensive Report Export**: Interactive modal with custom path selection, quick preset directory buttons (`Documents`, `Desktop`, `Home ~`, `/tmp`), and format chips (`.md`, `.json`, `.txt`).
 - **Metasploit RPC Integration**: Automates `msfrpcd` daemon connection for payload generation and listeners.
-- **Parallel/Sequenced Execution**: Run individual tools or perform a sequenced "Full Audit" targeting a domain, IP, URL, or username.
-- **Dual Console/Report Panels**: Stream standard output in real-time or switch to the structured report tab to view status and summaries.
-- **Report Export**: Easily export the compiled markdown reports for documentation.

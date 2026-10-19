@@ -8,6 +8,7 @@ Rectangle {
     property string displayName: ""
     property string category: ""
     property string description: ""
+    property string inputType: ""
     property bool isEnabled: true
     property bool isInstalled: false
     property bool isRunning: false
@@ -49,7 +50,7 @@ Rectangle {
 
         Row {
             width: parent.width
-            spacing: 8
+            spacing: 6
 
             // Subtle Status Indicator
             Rectangle {
@@ -78,6 +79,26 @@ Rectangle {
                 font.family: "JetBrains Mono, Fira Mono, monospace"
                 color: isEnabled ? "#ffffff" : "#666666"
                 Behavior on color { ColorAnimation { duration: 150 } }
+            }
+
+            // Input Type badge
+            Rectangle {
+                visible: root.inputType.length > 0
+                anchors.verticalCenter: parent.verticalCenter
+                width: inputTypeLabel.implicitWidth + 8; height: 14
+                radius: 3
+                color: "#0a192f"
+                border.color: "#1e3a5f"
+                border.width: 1
+                Text {
+                    id: inputTypeLabel
+                    anchors.centerIn: parent
+                    text: root.inputType.toUpperCase()
+                    font.pixelSize: 8
+                    font.weight: 700
+                    font.family: "JetBrains Mono, Fira Mono, monospace"
+                    color: "#00b4d8"
+                }
             }
             
             // Missing badge

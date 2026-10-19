@@ -174,10 +174,12 @@ TOOLS = {
         "category": "Web",
         "description": "Directory and file busting tool",
         "check": ["gobuster"],
-        "install_cmd": ["bash", "-c", "echo '956124' | sudo -S pacman -S --noconfirm gobuster"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "gobuster"],
         "input_type": "url",
         "build_cmd": lambda target, opts: [
-            "gobuster", "dir", "-u", target, "-w", "/home/avrlln/wordlists/common.txt", "-q", "-t", "10"
+            "gobuster", "dir", "-u", target,
+            "-w", os.path.expanduser("~/wordlists/common.txt") if os.path.exists(os.path.expanduser("~/wordlists/common.txt")) else "/usr/share/wordlists/dirb/common.txt",
+            "-q", "-t", "10"
         ],
         "parse": "generic",
     },
@@ -186,7 +188,7 @@ TOOLS = {
         "category": "Network",
         "description": "Swiss army knife for pentesting Active Directory / SMB environments",
         "check": ["netexec"],
-        "install_cmd": ["bash", "-c", "echo '956124' | sudo -S pacman -S --noconfirm --needed python-pipx rust cargo && pipx install git+https://github.com/Pennyw0rth/NetExec.git"],
+        "install_cmd": ["bash", "-c", "sudo pacman -S --noconfirm --needed python-pipx rust cargo && pipx install git+https://github.com/Pennyw0rth/NetExec.git"],
         "input_type": "ip",
         "build_cmd": lambda target, opts: ["netexec", "smb", target, "--shares", "--verbose", "--no-progress"],
         "parse": "generic",
@@ -206,9 +208,208 @@ TOOLS = {
         "category": "OSINT",
         "description": "Secret and credential leak scanner for git repositories/directories",
         "check": ["gitleaks"],
-        "install_cmd": ["bash", "-c", "echo '956124' | sudo -S pacman -S --noconfirm gitleaks"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "gitleaks"],
         "input_type": "path",
         "build_cmd": lambda target, opts: ["gitleaks", "dir", target, "-v", "--no-color"],
+        "parse": "generic",
+    },
+    "scoutsuite": {
+        "display": "ScoutSuite",
+        "category": "Cloud",
+        "description": "Multi-cloud security posture auditing (AWS, GCP, Azure, Alibaba)",
+        "check": ["scout", "scoutsuite"],
+        "install_cmd": ["bash", "-c", "pipx install scoutsuite || pip3 install --user --break-system-packages scoutsuite"],
+        "input_type": "cloud",
+        "build_cmd": lambda target, opts: [
+            _find_binary(["scout", "scoutsuite"]),
+            target.lower().strip() if target.lower().strip() in ["aws", "azure", "gcp", "aliyun", "oci"] else "aws",
+            "--no-browser",
+            "--report-dir", "/tmp/scoutsuite_report"
+        ],
+        "parse": "generic",
+    },
+    "prowler": {
+        "display": "Prowler",
+        "category": "Cloud",
+        "description": "Cloud security assessment & CIS benchmark tool (AWS, Azure, GCP)",
+        "check": ["prowler"],
+        "install_cmd": ["bash", "-c", "pip3 install --user --break-system-packages prowler"],
+        "input_type": "cloud",
+        "build_cmd": lambda target, opts: [
+            "prowler",
+            target.lower().strip() if target.lower().strip() in ["aws", "azure", "gcp", "kubernetes"] else "aws",
+            "-M", "csv,json",
+            "-F", "/tmp/prowler_out"
+        ],
+        "parse": "generic",
+    },
+    "pacu": {
+        "display": "Pacu",
+        "category": "Cloud",
+        "description": "AWS cloud security exploitation and post-exploitation framework",
+        "check": ["pacu"],
+        "install_cmd": ["bash", "-c", "pipx install pacu || pip3 install --user --break-system-packages pacu"],
+        "input_type": "cloud",
+        "build_cmd": lambda target, opts: [
+            "pacu",
+            "--session", target.strip() if target.strip() else "auditx_session"
+        ],
+        "parse": "generic",
+    },
+    "trivy": {
+        "display": "Trivy Cloud",
+        "category": "Cloud",
+        "description": "Cloud & IaC security scanner (AWS accounts, Kubernetes, Terraform)",
+        "check": ["trivy"],
+        "install_cmd": ["bash", "-c", "curl -sL https://github.com/aquasecurity/trivy/releases/download/v0.76.0/trivy_0.76.0_Linux-64bit.tar.gz -o /tmp/trivy.tar.gz && tar -xzf /tmp/trivy.tar.gz -C ~/.local/bin/ trivy && chmod +x ~/.local/bin/trivy"],
+        "input_type": "cloud",
+        "build_cmd": lambda target, opts: (
+            ["trivy", target.lower().strip()]
+            if target.lower().strip() in ["aws", "k8s", "kubernetes"]
+            else ["trivy", "misconfig", target.strip() if target.strip() else ".", "--format", "table"]
+        ),
+        "parse": "generic",
+    },
+    "checkov": {
+        "display": "Checkov",
+        "category": "Cloud",
+        "description": "Static code analysis for cloud IaC (Terraform, K8s, CloudFormation)",
+        "check": ["checkov"],
+        "install_cmd": ["bash", "-c", "pipx install checkov || pip3 install --user --break-system-packages checkov"],
+        "input_type": "path",
+        "build_cmd": lambda target, opts: [
+            "checkov",
+            "-d", target.strip() if target.strip() and os.path.isdir(target.strip()) else ".",
+            "--compact"
+        ],
+        "parse": "generic",
+    },
+    "aircrack-ng": {
+        "display": "Aircrack-ng",
+        "category": "Wireless",
+        "description": "802.11 WEP/WPA/WPA2 key cracker from handshake captures",
+        "check": ["aircrack-ng"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "aircrack-ng"],
+        "input_type": "path",
+        "build_cmd": lambda target, opts: [
+            "aircrack-ng",
+            target.strip() if target.strip() else "/tmp/handshake.cap"
+        ],
+        "parse": "generic",
+    },
+    "airodump-ng": {
+        "display": "Airodump-ng",
+        "category": "Wireless",
+        "description": "Packet sniffer & live wireless network monitor (BSSID, channel, encryption)",
+        "check": ["airodump-ng"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "aircrack-ng"],
+        "input_type": "interface",
+        "build_cmd": lambda target, opts: [
+            "airodump-ng",
+            "--write", "/tmp/auditx_airodump",
+            "--output-format", "csv",
+            target.strip() if target.strip() else "wlp0s20f3"
+        ],
+        "parse": "generic",
+    },
+    "airmon-ng": {
+        "display": "Airmon-ng",
+        "category": "Wireless",
+        "description": "Manage wireless card monitor mode & check conflicting processes",
+        "check": ["airmon-ng"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "aircrack-ng"],
+        "input_type": "interface",
+        "build_cmd": lambda target, opts: [
+            "airmon-ng",
+            "start", target.strip() if target.strip() else "wlp0s20f3"
+        ],
+        "parse": "generic",
+    },
+    "wifite": {
+        "display": "Wifite",
+        "category": "Wireless",
+        "description": "Automated wireless auditor (attacks WEP, WPA handshakes & PMKID)",
+        "check": ["wifite"],
+        "install_cmd": ["pipx", "install", "git+https://github.com/derv82/wifite2.git"],
+        "input_type": "interface",
+        "build_cmd": lambda target, opts: [
+            "wifite",
+            "-i", target.strip() if target.strip() else "wlp0s20f3",
+            "--kill",
+            "--nodeauth"
+        ],
+        "parse": "generic",
+    },
+    "kismet": {
+        "display": "Kismet",
+        "category": "Wireless",
+        "description": "Wireless network detector, packet sniffer, and wardriving IDS",
+        "check": ["kismet"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "kismet"],
+        "input_type": "interface",
+        "build_cmd": lambda target, opts: [
+            "kismet",
+            "-c", target.strip() if target.strip() else "wlp0s20f3",
+            "--no-interactive",
+            "--log-title", "auditx_kismet"
+        ],
+        "parse": "generic",
+    },
+    "jadx": {
+        "display": "Jadx Decompiler",
+        "category": "Reverse Eng",
+        "description": "Dex to Java decompiler and Android APK source extractor",
+        "check": ["jadx"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "jadx"],
+        "input_type": "path",
+        "build_cmd": lambda target, opts: [
+            "jadx",
+            "-d", "/tmp/auditx_jadx_out",
+            "--show-bad-code",
+            target.strip() if target.strip() else "."
+        ],
+        "parse": "generic",
+    },
+    "apktool": {
+        "display": "Apktool",
+        "category": "Reverse Eng",
+        "description": "Disassemble and decode Android APK resources, manifest, and smali code",
+        "check": ["apktool"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "apktool"],
+        "input_type": "path",
+        "build_cmd": lambda target, opts: [
+            "apktool", "d", "-f",
+            "-o", "/tmp/auditx_apktool_out",
+            target.strip() if target.strip() else "."
+        ],
+        "parse": "generic",
+    },
+    "binwalk": {
+        "display": "Binwalk",
+        "category": "Reverse Eng",
+        "description": "Firmware analysis tool & embedded file signature scanner",
+        "check": ["binwalk"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "binwalk"],
+        "input_type": "path",
+        "build_cmd": lambda target, opts: [
+            "binwalk",
+            "-B",
+            target.strip() if target.strip() else "."
+        ],
+        "parse": "generic",
+    },
+    "radare2": {
+        "display": "Radare2 (r2)",
+        "category": "Reverse Eng",
+        "description": "UNIX-like reverse engineering framework (binary headers, symbols, strings)",
+        "check": ["rabin2", "r2", "radare2"],
+        "install_cmd": ["sudo", "pacman", "-S", "--noconfirm", "radare2"],
+        "input_type": "path",
+        "build_cmd": lambda target, opts: [
+            "rabin2",
+            "-I", "-z",
+            target.strip() if target.strip() else "."
+        ],
         "parse": "generic",
     },
 }
@@ -386,10 +587,100 @@ def run_tool(tool_name: str, target: str):
         cmd = meta["build_cmd"](target, {})
         stream_process(tool_name, cmd)
 
-def run_full_audit(target: str, tools: list):
-    emit("audit_start", target=target, tools=tools)
+def resolve_target_for_tool(tool_name: str, fallback_target: str, targets: dict = None) -> str:
+    """Resolve specific target for a tool based on its input_type and supplied targets."""
+    if targets is None:
+        targets = {}
+    meta = TOOLS.get(tool_name, {})
+    itype = meta.get("input_type", "ip").lower()
+
+    if itype in ["cloud", "provider"]:
+        val = targets.get("cloud") or targets.get("provider")
+        if val and val.strip():
+            return val.strip()
+        if fallback_target and fallback_target.strip():
+            return fallback_target.strip()
+        return "aws"
+
+    if itype in ["path", "directory", "dir"]:
+        val = targets.get("path")
+        if val and val.strip():
+            return val.strip()
+        if fallback_target and os.path.exists(fallback_target.strip()):
+            return fallback_target.strip()
+        return "."
+
+    if itype in ["user", "username"]:
+        val = targets.get("username") or targets.get("user")
+        if val and val.strip():
+            return val.strip()
+        if fallback_target and fallback_target.strip():
+            return fallback_target.strip()
+        return "admin"
+
+    if itype == "url":
+        val = targets.get("url")
+        if val and val.strip():
+            return val.strip()
+        dom = targets.get("domain")
+        if dom and dom.strip():
+            return f"https://{dom.strip()}"
+        ip = targets.get("ip")
+        if ip and ip.strip():
+            return f"http://{ip.strip()}"
+        if fallback_target and fallback_target.strip():
+            fb = fallback_target.strip()
+            if not fb.startswith(("http://", "https://")):
+                return f"https://{fb}"
+            return fb
+        return ""
+
+    if itype == "domain":
+        val = targets.get("domain")
+        if val and val.strip():
+            return val.strip()
+        url = targets.get("url")
+        if url and url.strip():
+            cleaned = re.sub(r"^https?://", "", url.strip()).split("/")[0].split(":")[0]
+            if cleaned:
+                return cleaned
+        ip = targets.get("ip")
+        if ip and ip.strip():
+            return ip.strip()
+        if fallback_target and fallback_target.strip():
+            cleaned = re.sub(r"^https?://", "", fallback_target.strip()).split("/")[0].split(":")[0]
+            return cleaned
+        return ""
+
+    if itype in ["interface", "wlan", "wifi"]:
+        val = targets.get("interface") or targets.get("wlan")
+        if val and val.strip():
+            return val.strip()
+        if fallback_target and fallback_target.strip():
+            return fallback_target.strip()
+        return "wlp0s20f3"
+
+    # itype == "ip" or fallback
+    val = targets.get("ip")
+    if val and val.strip():
+        return val.strip()
+    dom = targets.get("domain")
+    if dom and dom.strip():
+        return dom.strip()
+    url = targets.get("url")
+    if url and url.strip():
+        cleaned = re.sub(r"^https?://", "", url.strip()).split("/")[0].split(":")[0]
+        if cleaned:
+            return cleaned
+    if fallback_target and fallback_target.strip():
+        return fallback_target.strip()
+    return ""
+
+def run_full_audit(target: str, tools: list, targets: dict = None):
+    emit("audit_start", target=target, tools=tools, targets=targets or {})
     for tool_name in tools:
-        run_tool(tool_name, target)
+        specific_target = resolve_target_for_tool(tool_name, target, targets)
+        run_tool(tool_name, specific_target)
     emit("audit_done", target=target)
 
 # ─── Entry Point ─────────────────────────────────────────────────────────────
@@ -404,16 +695,30 @@ def main():
     # Run single tool
     run_p = sub.add_parser("run", help="Run a single tool")
     run_p.add_argument("tool", help="Tool name")
-    run_p.add_argument("target", help="Target (IP/domain/URL/username)")
+    run_p.add_argument("target", help="Target (IP/domain/URL/username/cloud/path/interface)")
 
     # Full audit
     audit_p = sub.add_parser("audit", help="Run all/selected tools")
-    audit_p.add_argument("target", help="Target")
+    audit_p.add_argument("target", nargs="?", default="", help="Primary target")
     audit_p.add_argument("--tools", nargs="+", default=list(TOOLS.keys()))
+    audit_p.add_argument("--targets", help="JSON encoded targets by type (ip, domain, url, cloud, path, username, interface)")
+    audit_p.add_argument("--ip", help="Target IP / subnet")
+    audit_p.add_argument("--domain", help="Target domain")
+    audit_p.add_argument("--url", help="Target URL")
+    audit_p.add_argument("--cloud", help="Target cloud provider")
+    audit_p.add_argument("--path", help="Target path / repository")
+    audit_p.add_argument("--user", help="Target username")
+    audit_p.add_argument("--interface", help="Target wireless interface (e.g. wlp0s20f3, wlan0)")
 
     # Install a tool
     inst_p = sub.add_parser("install", help="Install a tool")
     inst_p.add_argument("tool")
+
+    # Export report
+    exp_p = sub.add_parser("export", help="Save report content to file")
+    exp_p.add_argument("--out", required=True, help="Destination file path")
+    exp_p.add_argument("--content", default="", help="Report content string")
+    exp_p.add_argument("--file", help="Input file containing content")
 
     args = parser.parse_args()
 
@@ -425,10 +730,55 @@ def main():
         run_tool(args.tool, args.target)
 
     elif args.cmd == "audit":
-        run_full_audit(args.target, args.tools)
+        targets_dict = {}
+        if args.targets:
+            try:
+                targets_dict = json.loads(args.targets)
+            except Exception:
+                targets_dict = {}
+        if args.ip: targets_dict["ip"] = args.ip
+        if args.domain: targets_dict["domain"] = args.domain
+        if args.url: targets_dict["url"] = args.url
+        if args.cloud: targets_dict["cloud"] = args.cloud
+        if args.path: targets_dict["path"] = args.path
+        if args.user: targets_dict["username"] = args.user
+        if args.interface: targets_dict["interface"] = args.interface
+
+        primary_target = (
+            args.target
+            or targets_dict.get("ip")
+            or targets_dict.get("domain")
+            or targets_dict.get("url")
+            or targets_dict.get("cloud")
+            or targets_dict.get("path")
+            or targets_dict.get("username")
+            or targets_dict.get("interface")
+            or "target"
+        )
+        run_full_audit(primary_target, args.tools, targets_dict)
 
     elif args.cmd == "install":
         install_tool(args.tool)
+
+    elif args.cmd == "export":
+        out_path = os.path.expanduser(args.out.strip())
+        content = args.content or ""
+        if args.file and os.path.exists(args.file):
+            try:
+                with open(args.file, "r", encoding="utf-8") as f:
+                    content = f.read()
+            except Exception as e:
+                emit("export_done", path=out_path, success=False, error=str(e))
+                return
+        try:
+            parent_dir = os.path.dirname(os.path.abspath(out_path))
+            if parent_dir:
+                os.makedirs(parent_dir, exist_ok=True)
+            with open(out_path, "w", encoding="utf-8") as f:
+                f.write(content)
+            emit("export_done", path=out_path, success=True, bytes=len(content))
+        except Exception as e:
+            emit("export_done", path=out_path, success=False, error=str(e))
 
     else:
         parser.print_help()
