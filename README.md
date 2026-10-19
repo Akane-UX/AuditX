@@ -83,6 +83,7 @@ sudo pacman -S aircrack-ng kismet binwalk radare2
 - **Auto-Installation**: If a tool is missing, the backend can attempt to pull and install it in user-space or system.
 - **Multi-Target Routing**: Dedicated target inputs for IP/Subnet, Domain, URL, Cloud Provider, Local Path, Username, and Wireless Interface.
 - **Deterministic Rule-Based Summarizer**: Zero-latency local heuristics that extract open ports, CVEs, cloud misconfigurations, exposed credentials, and generate hardening recommendations.
+- **Dedicated Network Recon**: One-click local IP auto-discovery and live subnet ping sweep (`nmap -sn` or `arp-scan`) with dedicated live stream tab and auto-population of Target IP.
 - **Multi-Tab Terminal Console**: Switch between global output stream and isolated per-tool live log tabs.
 - **Comprehensive Report Export**: Interactive modal with custom path selection, quick preset directory buttons (`Documents`, `Desktop`, `Home ~`, `/tmp`), and format chips (`.md`, `.json`, `.txt`).
 - **Metasploit RPC Integration**: Automates `msfrpcd` daemon connection for payload generation and listeners.

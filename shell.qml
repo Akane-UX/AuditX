@@ -221,6 +221,15 @@ ShellRoot {
             isRunning = false
             break
 
+        case "recon_result":
+            if (ev.local_ip && ev.local_ip !== "127.0.0.1") {
+                if (!targetIp || targetIp.trim() === "") {
+                    targetIp = ev.local_ip
+                    consoleView.info("Auto-detected local IP: " + ev.local_ip + " (set as Target IP)")
+                }
+            }
+            break
+
         case "tool_start":
             consoleView.currentTool = ev.tool
             consoleView.addTab(ev.tool, displayFor(ev.tool))
@@ -302,6 +311,7 @@ ShellRoot {
     }
 
     function displayFor(toolId) {
+        if (toolId === "network_recon") return "Network Recon"
         for (var i = 0; i < toolMeta.length; i++)
             if (toolMeta[i].id === toolId) return toolMeta[i].display
         return toolId
@@ -448,6 +458,31 @@ ShellRoot {
         statusProcess.running = true
     }
 
+    function runNetworkRecon() {
+        if (isRunning) {
+            consoleView.warn("A scan or task is already running. Please wait.")
+            return
+        }
+
+        isRunning = true
+        toolRunState = {}
+        toolLines    = {}
+        reportView.clear()
+        consoleView.resetTabs()
+        consoleView.addTab("network_recon", "Network Recon")
+        activeTab = "console"
+
+        var targetIpOrSubnet = targetIp.trim()
+        consoleView.system("Launching Network Recon" + (targetIpOrSubnet ? " on " + targetIpOrSubnet : " (Local Subnet Auto-Discovery)") + "…")
+
+        var cmd = ["python3", backendPath, "recon"]
+        if (targetIpOrSubnet) {
+            cmd.push(targetIpOrSubnet)
+        }
+        backendProcess.command = cmd
+        backendProcess.running = true
+    }
+
     // ── Window ─────────────────────────────────────────────────────────────────
     FloatingWindow {
         id: mainWindow
@@ -566,6 +601,10 @@ ShellRoot {
 
                 onCheckStatusRequested: {
                     checkStatus()
+                }
+
+                onNetworkReconRequested: {
+                    runNetworkRecon()
                 }
             }
 

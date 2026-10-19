@@ -19,6 +19,7 @@ Rectangle {
 
     signal runSelectedRequested()
     signal fullAuditRequested()
+    signal networkReconRequested()
     signal checkStatusRequested()
 
     width: parent.width
@@ -349,6 +350,40 @@ Rectangle {
                     }
                 }
 
+                // Network Recon Button
+                Rectangle {
+                    height: 40; width: 125; radius: 6
+                    color: reconHover.containsMouse && !root.isRunning ? "#0a192f" : "#0c0c0c"
+                    border.color: root.isRunning ? "#111" : (reconHover.containsMouse ? "#0066ff" : "#1a365d"); border.width: 1
+                    opacity: root.isRunning ? 0.5 : 1
+                    Behavior on color { ColorAnimation { duration: 120 } }
+                    Behavior on border.color { ColorAnimation { duration: 120 } }
+
+                    Column {
+                        anchors.centerIn: parent; spacing: 1
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: "Network Recon"
+                            font.pixelSize: 11; font.weight: 600
+                            font.family: "JetBrains Mono, Fira Mono, monospace"
+                            color: "#00d4ff"
+                        }
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: "Subnet sweep"
+                            font.pixelSize: 8; font.family: "JetBrains Mono, Fira Mono, monospace"
+                            color: "#5588aa"
+                        }
+                    }
+
+                    MouseArea {
+                        id: reconHover
+                        anchors.fill: parent; hoverEnabled: true
+                        cursorShape: root.isRunning ? Qt.ArrowCursor : Qt.PointingHandCursor
+                        onClicked: { if (!root.isRunning) root.networkReconRequested() }
+                    }
+                }
+
                 // Status Button
                 Rectangle {
                     height: 40; width: 80; radius: 6
@@ -519,6 +554,29 @@ Rectangle {
                             anchors.fill: parent; hoverEnabled: true
                             cursorShape: root.isRunning ? Qt.ArrowCursor : Qt.PointingHandCursor
                             onClicked: { if (!root.isRunning) root.fullAuditRequested() }
+                        }
+                    }
+
+                    // Network Recon Button
+                    Rectangle {
+                        height: 34; width: 115; radius: 5
+                        color: reconMultiHover.containsMouse && !root.isRunning ? "#0a192f" : "#0c0c0c"
+                        border.color: root.isRunning ? "#111" : (reconMultiHover.containsMouse ? "#0066ff" : "#1a365d"); border.width: 1
+                        opacity: root.isRunning ? 0.5 : 1
+                        Behavior on color { ColorAnimation { duration: 120 } }
+                        Behavior on border.color { ColorAnimation { duration: 120 } }
+                        Text {
+                            anchors.centerIn: parent
+                            text: "Network Recon"
+                            font.pixelSize: 11; font.weight: 600
+                            font.family: "JetBrains Mono, Fira Mono, monospace"
+                            color: "#00d4ff"
+                        }
+                        MouseArea {
+                            id: reconMultiHover
+                            anchors.fill: parent; hoverEnabled: true
+                            cursorShape: root.isRunning ? Qt.ArrowCursor : Qt.PointingHandCursor
+                            onClicked: { if (!root.isRunning) root.networkReconRequested() }
                         }
                     }
 

@@ -14,6 +14,7 @@ import threading
 import time
 import argparse
 import re
+import socket
 
 # Ensure user local bin is in PATH for pip-installed binaries
 local_bin = os.path.expanduser("~/.local/bin")
@@ -563,7 +564,57 @@ def stream_process(tool_name: str, cmd: list, timeout: int = 300):
         emit("tool_error", tool=tool_name, message=str(e))
         return False
 
+def get_local_ip() -> str:
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(('10.255.255.255', 1))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = '127.0.0.1'
+    finally:
+        s.close()
+    return ip
+
+def run_network_recon(target: str = ""):
+    tool_name = "network_recon"
+    my_ip = get_local_ip()
+
+    if target and target.strip():
+        chosen_subnet = target.strip()
+    elif my_ip != '127.0.0.1':
+        chosen_subnet = ".".join(my_ip.split('.')[:-1]) + ".0/24"
+    else:
+        chosen_subnet = ""
+
+    emit("recon_result", local_ip=my_ip, subnet=chosen_subnet)
+
+    if not chosen_subnet:
+        emit("tool_start", tool=tool_name, cmd=f"Network Recon (Local IP: {my_ip})")
+        emit("tool_output", tool=tool_name, line="[*] Initiating Network Recon...")
+        emit("tool_output", tool=tool_name, line=f"[+] Local IP Address: {my_ip}")
+        emit("tool_output", tool=tool_name, line="[!] Loopback IP detected (127.0.0.1). Skipping subnet discovery.")
+        emit("tool_done", tool=tool_name, exit_code=0)
+        return
+
+    has_nmap = shutil.which("nmap") is not None
+    has_arpscan = shutil.which("arp-scan") is not None
+
+    if has_nmap:
+        cmd = ["nmap", "-sn", chosen_subnet]
+        stream_process(tool_name, cmd)
+    elif has_arpscan:
+        cmd = ["sudo", "arp-scan", "--localnet"]
+        stream_process(tool_name, cmd)
+    else:
+        emit("tool_start", tool=tool_name, cmd=f"Network Recon (Local IP: {my_ip})")
+        emit("tool_error", tool=tool_name, message="Neither 'nmap' nor 'arp-scan' is installed on this system.")
+        emit("tool_done", tool=tool_name, exit_code=1)
+
 def run_tool(tool_name: str, target: str):
+    if tool_name in ["network_recon", "recon"]:
+        run_network_recon(target)
+        return
+
     meta = TOOLS.get(tool_name)
     if not meta:
         emit("tool_error", tool=tool_name, message="Unknown tool")
@@ -720,6 +771,10 @@ def main():
     exp_p.add_argument("--content", default="", help="Report content string")
     exp_p.add_argument("--file", help="Input file containing content")
 
+    # Network Recon command
+    recon_p = sub.add_parser("recon", help="Perform Network Recon (local IP & subnet sweep)")
+    recon_p.add_argument("target", nargs="?", default="", help="Optional specific subnet or IP")
+
     args = parser.parse_args()
 
     if args.cmd == "status":
@@ -779,6 +834,9 @@ def main():
             emit("export_done", path=out_path, success=True, bytes=len(content))
         except Exception as e:
             emit("export_done", path=out_path, success=False, error=str(e))
+
+    elif args.cmd == "recon":
+        run_network_recon(args.target)
 
     else:
         parser.print_help()
