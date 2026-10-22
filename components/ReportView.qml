@@ -741,6 +741,24 @@ Rectangle {
                     vulns.push("[sqlmap] " + l)
                 }
 
+                // 3b. Wapiti web vulnerability findings (All 30 modules)
+                if (tool === "wapiti" && (l.indexOf("Wapiti Vuln:") !== -1 || l.indexOf("via injection") !== -1 || l.indexOf("Evil url:") !== -1 || l.indexOf("vulnerability") !== -1)) {
+                    var lLow = l.toLowerCase()
+                    if (lLow.indexOf("command execution") !== -1 || lLow.indexOf("sql injection") !== -1 || lLow.indexOf("log4shell") !== -1 || lLow.indexOf("spring4shell") !== -1 || lLow.indexOf("shellshock") !== -1 || lLow.indexOf("ssrf") !== -1 || lLow.indexOf("server side request forgery") !== -1 || lLow.indexOf("xxe") !== -1 || lLow.indexOf("ldap") !== -1 || lLow.indexOf("file inclusion") !== -1 || lLow.indexOf("path traversal") !== -1 || lLow.indexOf("file upload") !== -1) {
+                        critCount++
+                        vulns.push("[wapiti-critical] " + l)
+                    } else if (lLow.indexOf("cross site scripting") !== -1 || lLow.indexOf("xss") !== -1 || lLow.indexOf("csrf") !== -1 || lLow.indexOf("crlf") !== -1 || lLow.indexOf("open redirect") !== -1 || lLow.indexOf("weak credentials") !== -1 || lLow.indexOf("htaccess") !== -1) {
+                        highCount++
+                        vulns.push("[wapiti-high] " + l)
+                    } else if (lLow.indexOf("backup file") !== -1 || lLow.indexOf("information disclosure") !== -1 || lLow.indexOf("full path") !== -1) {
+                        medCount++
+                        vulns.push("[wapiti-med] " + l)
+                    } else if (l.indexOf("Wapiti Vuln:") !== -1) {
+                        medCount++
+                        vulns.push("[wapiti] " + l)
+                    }
+                }
+
                 // 4. Gobuster endpoints (Status 200 / 301)
                 if (tool === "gobuster" && (l.indexOf("Status: 200") !== -1 || l.indexOf("Status: 301") !== -1)) {
                     if (endpoints.indexOf(l) === -1) endpoints.push(l)
@@ -842,6 +860,9 @@ Rectangle {
         }
         if (vulns.some(function(v){ return v.indexOf("[radare2") !== -1 || v.indexOf("[binwalk") !== -1 })) {
             recs.push("Analisis artefak biner menemukan firmware/binary protections perlu ditinjau (aktifkan Stack Canary, PIE, dan NX).")
+        }
+        if (vulns.some(function(v){ return v.indexOf("[wapiti") !== -1 })) {
+            recs.push("Kerentanan web terdeteksi oleh Wapiti (SQLi/XSS/SSRF/RCE/Upload). Validasi dan sanitasi semua input pengguna serta terapkan WAF.")
         }
         if (recs.length === 0) {
             recs.push("Tidak ada ancaman kritis yang teridentifikasi secara langsung. Tetap terapkan prinsip Least Privilege.")

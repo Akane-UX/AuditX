@@ -21,6 +21,53 @@ local_bin = os.path.expanduser("~/.local/bin")
 if local_bin not in os.environ.get("PATH", "").split(os.pathsep):
     os.environ["PATH"] = local_bin + os.pathsep + os.environ.get("PATH", "")
 
+def _normalize_url(target: str) -> str:
+    """Ensure target URL has a valid scheme (http/https) for scanners like Wapiti."""
+    target = (target or "").strip()
+    if not target:
+        return "http://localhost"
+    if not (target.startswith("http://") or target.startswith("https://")):
+        return f"http://{target}"
+    return target
+
+# ─── Wapiti Attack Modules (34 Modules) ───────────────────────────────────────
+WAPITI_MODULES = {
+    "backup": "Search backup copies of scripts and archives on web server",
+    "brute_login_form": "Brute-force login forms using common credentials wordlist",
+    "buster": "Brute-force file and directory paths (DirBuster-style exploration)",
+    "cms": "Detect Content Management Systems (CMS) and version vulnerabilities",
+    "cookieflags": "Check cookie security flags (Secure, HttpOnly, SameSite)",
+    "crlf": "Detect Carriage Return Line Feed (CRLF) / HTTP response splitting",
+    "csp": "Evaluate Content Security Policy (CSP) presence and configuration",
+    "csrf": "Detect forms missing Cross-Site Request Forgery (CSRF) protections",
+    "exec": "Detect Remote Code Execution (RCE) and system command injection",
+    "file": "Detect Path Traversal, Local and Remote File Inclusion (LFI/RFI)",
+    "htaccess": "Bypass authorization controls via custom HTTP verbs and headers",
+    "htp": "Fingerprint web technologies using HashThePlanet database",
+    "http_headers": "Audit HTTP security headers (HSTS, X-Content-Type-Options, etc.)",
+    "https_redirect": "Verify strict redirection from insecure HTTP to HTTPS",
+    "ldap": "Detect error-based and boolean-based LDAP injection flaws",
+    "log4shell": "Detect Apache Log4Shell remote code execution (CVE-2021-44228)",
+    "methods": "Audit uncommon or dangerous HTTP methods (PUT, DELETE, OPTIONS)",
+    "network_device": "Detect specialized network devices, firewalls, and appliances",
+    "nikto": "Brute-force known vulnerable scripts using Nikto rules database",
+    "permanentxss": "Detect stored (persistent) Cross-Site Scripting (XSS)",
+    "printer": "Detect networked printer interfaces and firmware disclosure",
+    "redirect": "Detect unvalidated redirect parameters and open relay vectors",
+    "shellshock": "Detect GNU Bash Shellshock execution vulnerability (CVE-2014-6271)",
+    "spring4shell": "Detect Spring Framework RCE vulnerability (CVE-2022-22965)",
+    "sql": "Detect SQL and XPath injection via error-based and boolean techniques",
+    "ssl": "Audit SSL/TLS certificates, cipher suites, and protocol security",
+    "ssrf": "Detect Server-Side Request Forgery (SSRF) vulnerabilities",
+    "takeover": "Detect dangling DNS records and unclaimed CNAME takeovers",
+    "timesql": "Detect blind SQL injection using time-delay inference",
+    "upload": "Detect unrestricted arbitrary file upload vulnerabilities",
+    "wapp": "Fingerprint web stack technologies and map to known CVEs",
+    "wp_enum": "Enumerate WordPress themes, plugins, and vulnerable versions",
+    "xss": "Detect reflected Cross-Site Scripting in query parameters and forms",
+    "xxe": "Detect XML External Entity (XXE) injection vulnerabilities",
+}
+
 # ─── Tool Definitions ────────────────────────────────────────────────────────
 
 TOOLS = {
@@ -105,6 +152,24 @@ TOOLS = {
         "install_cmd": ["pip3", "install", "--user", "--break-system-packages", "sqlmap"],
         "input_type": "url",
         "build_cmd": lambda target, opts: ["sqlmap", "-u", target, "--batch", "--output-dir=/tmp/sqlmap_out"],
+        "parse": "generic",
+    },
+    "wapiti": {
+        "display": "Wapiti (All 34 Modules)",
+        "category": "Wapiti",
+        "description": "Full web vulnerability scanner loaded with all 34 attack modules (-m all)",
+        "check": ["wapiti", "wapiti3"],
+        "install_cmd": ["bash", "-c", "pipx install wapiti3 || pip3 install --user --break-system-packages wapiti3"],
+        "input_type": "url",
+        "build_cmd": lambda target, opts: [
+            "wapiti",
+            "-u", _normalize_url(target),
+            "-m", opts.get("modules", "all"),
+            "--flush-session",
+            "--no-bugreport",
+            "-f", "json",
+            "-o", "/tmp/wapiti_out.json"
+        ],
         "parse": "generic",
     },
     "metasploit": {
@@ -415,6 +480,28 @@ TOOLS = {
     },
 }
 
+# Automatically register all 34 individual Wapiti attack modules
+for _mod_name, _mod_desc in WAPITI_MODULES.items():
+    _display_title = _mod_name.replace('_', ' ').title()
+    TOOLS[f"wapiti_{_mod_name}"] = {
+        "display": f"Wapiti: {_display_title}",
+        "category": "Wapiti",
+        "description": _mod_desc,
+        "check": ["wapiti", "wapiti3"],
+        "install_cmd": ["bash", "-c", "pipx install wapiti3 || pip3 install --user --break-system-packages wapiti3"],
+        "input_type": "url",
+        "build_cmd": (lambda m=_mod_name: (lambda target, opts: [
+            "wapiti",
+            "-u", _normalize_url(target),
+            "-m", m,
+            "--flush-session",
+            "--no-bugreport",
+            "-f", "json",
+            "-o", f"/tmp/wapiti_{m}_out.json"
+        ]))(),
+        "parse": "generic",
+    }
+
 # ─── Output Helpers ───────────────────────────────────────────────────────────
 
 def emit(event: str, **kwargs):
@@ -610,7 +697,9 @@ def run_network_recon(target: str = ""):
         emit("tool_error", tool=tool_name, message="Neither 'nmap' nor 'arp-scan' is installed on this system.")
         emit("tool_done", tool=tool_name, exit_code=1)
 
-def run_tool(tool_name: str, target: str):
+def run_tool(tool_name: str, target: str, opts: dict = None):
+    if opts is None:
+        opts = {}
     if tool_name in ["network_recon", "recon"]:
         run_network_recon(target)
         return
@@ -629,13 +718,34 @@ def run_tool(tool_name: str, target: str):
     if tool_name == "msf_rpc":
         run_msf_rpc(target)
     elif tool_name == "msf_listener":
-        cmd = meta["build_cmd"](target, {})
+        cmd = meta["build_cmd"](target, opts)
         stream_process(tool_name, cmd, timeout=3600)
     elif tool_name == "nuclei":
-        cmd = meta["build_cmd"](target, {})
+        cmd = meta["build_cmd"](target, opts)
         stream_process(tool_name, cmd, timeout=1800)
+    elif tool_name == "wapiti" or tool_name.startswith("wapiti_"):
+        cmd = meta["build_cmd"](target, opts)
+        stream_process(tool_name, cmd, timeout=1800)
+        # Parse output json if generated and emit structured lines
+        out_json = f"/tmp/{tool_name}_out.json" if tool_name.startswith("wapiti_") else "/tmp/wapiti_out.json"
+        if os.path.exists(out_json):
+            try:
+                with open(out_json, "r", encoding="utf-8") as f:
+                    wdata = json.load(f)
+                vulns = wdata.get("vulnerabilities", {})
+                found_count = 0
+                for vname, vlist in vulns.items():
+                    if vlist:
+                        for item in vlist:
+                            found_count += 1
+                            info = item.get("info", "") or item.get("parameter", "") or item.get("path", "")
+                            emit("tool_output", tool=tool_name, line=f"[+] Wapiti Vuln: {vname} - {info}")
+                if found_count == 0:
+                    emit("tool_output", tool=tool_name, line=f"[*] Wapiti ({tool_name}) scan completed: No vulnerabilities detected.")
+            except Exception as e:
+                emit("tool_output", tool=tool_name, line=f"[*] Wapiti report parsing note: {e}")
     else:
-        cmd = meta["build_cmd"](target, {})
+        cmd = meta["build_cmd"](target, opts)
         stream_process(tool_name, cmd)
 
 def resolve_target_for_tool(tool_name: str, fallback_target: str, targets: dict = None) -> str:
@@ -747,6 +857,10 @@ def main():
     run_p = sub.add_parser("run", help="Run a single tool")
     run_p.add_argument("tool", help="Tool name")
     run_p.add_argument("target", help="Target (IP/domain/URL/username/cloud/path/interface)")
+    run_p.add_argument("--modules", "--wapiti-modules", default="all", help="Modules to run for tools like Wapiti (default: all)")
+
+    # Wapiti Modules inspection
+    sub.add_parser("wapiti-modules", help="List all 30 Wapiti attack modules with descriptions")
 
     # Full audit
     audit_p = sub.add_parser("audit", help="Run all/selected tools")
@@ -781,8 +895,11 @@ def main():
         status = get_tool_status()
         emit("status", tools=status)
 
+    elif args.cmd == "wapiti-modules":
+        emit("wapiti_modules", total=len(WAPITI_MODULES), modules=WAPITI_MODULES)
+
     elif args.cmd == "run":
-        run_tool(args.tool, args.target)
+        run_tool(args.tool, args.target, opts={"modules": getattr(args, "modules", "all")})
 
     elif args.cmd == "audit":
         targets_dict = {}

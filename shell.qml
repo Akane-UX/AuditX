@@ -82,7 +82,44 @@ ShellRoot {
         { id: "jadx",          display: "Jadx Decompiler", category: "Reverse Eng",  inputType: "path",      description: "Dex to Java decompiler and APK source extractor" },
         { id: "apktool",       display: "Apktool",         category: "Reverse Eng",  inputType: "path",      description: "Disassemble Android APK resources, manifest & smali" },
         { id: "binwalk",       display: "Binwalk",         category: "Reverse Eng",  inputType: "path",      description: "Firmware analysis tool & embedded signature scanner" },
-        { id: "radare2",       display: "Radare2 (r2)",    category: "Reverse Eng",  inputType: "path",      description: "UNIX-like RE framework (binary headers, symbols, strings)" }
+        { id: "radare2",       display: "Radare2 (r2)",    category: "Reverse Eng",  inputType: "path",      description: "UNIX-like RE framework (binary headers, symbols, strings)" },
+
+        // ── Wapiti Dedicated Category (All 34 Modules + Master) ──────────────────
+        { id: "wapiti", display: "Wapiti (All 34 Modules)", category: "Wapiti", inputType: "url", description: "Full web vulnerability scanner loaded with all 34 attack modules (-m all)" },
+        { id: "wapiti_sql", display: "Wapiti: SQL Injection", category: "Wapiti", inputType: "url", description: "Detect SQL & XPath injection via error-based and boolean blind techniques" },
+        { id: "wapiti_timesql", display: "Wapiti: Time-Based SQLi", category: "Wapiti", inputType: "url", description: "Detect blind SQL injection vulnerabilities using time-delay analysis" },
+        { id: "wapiti_xss", display: "Wapiti: Reflected XSS", category: "Wapiti", inputType: "url", description: "Detect reflected Cross-Site Scripting flaws in query parameters and forms" },
+        { id: "wapiti_permanentxss", display: "Wapiti: Stored XSS", category: "Wapiti", inputType: "url", description: "Detect stored/persistent Cross-Site Scripting vulnerabilities on the web server" },
+        { id: "wapiti_exec", display: "Wapiti: Command Execution", category: "Wapiti", inputType: "url", description: "Detect Remote Code Execution (RCE) and system command injection vectors" },
+        { id: "wapiti_file", display: "Wapiti: File Inclusion", category: "Wapiti", inputType: "url", description: "Detect Path Traversal and Local/Remote File Inclusion (LFI/RFI) flaws" },
+        { id: "wapiti_ssrf", display: "Wapiti: SSRF", category: "Wapiti", inputType: "url", description: "Detect Server-Side Request Forgery vulnerabilities via callback endpoints" },
+        { id: "wapiti_xxe", display: "Wapiti: XXE Injection", category: "Wapiti", inputType: "url", description: "Detect XML External Entity injection and sensitive file reading vulnerabilities" },
+        { id: "wapiti_ldap", display: "Wapiti: LDAP Injection", category: "Wapiti", inputType: "url", description: "Detect error-based and boolean-based LDAP query injection vulnerabilities" },
+        { id: "wapiti_upload", display: "Wapiti: Arbitrary Upload", category: "Wapiti", inputType: "url", description: "Detect unrestricted file upload flaws for web shell deployment" },
+        { id: "wapiti_log4shell", display: "Wapiti: Log4Shell", category: "Wapiti", inputType: "url", description: "Scan for Apache Log4Shell remote code execution vulnerability (CVE-2021-44228)" },
+        { id: "wapiti_spring4shell", display: "Wapiti: Spring4Shell", category: "Wapiti", inputType: "url", description: "Detect Spring Framework Remote Code Execution vulnerability (CVE-2022-22965)" },
+        { id: "wapiti_shellshock", display: "Wapiti: Shellshock", category: "Wapiti", inputType: "url", description: "Detect GNU Bash Shellshock execution vulnerability (CVE-2014-6271)" },
+        { id: "wapiti_takeover", display: "Wapiti: Subdomain Takeover", category: "Wapiti", inputType: "url", description: "Detect dangling DNS / CNAME records vulnerable to subdomain hijacking" },
+        { id: "wapiti_crlf", display: "Wapiti: CRLF Injection", category: "Wapiti", inputType: "url", description: "Detect Carriage Return Line Feed (CRLF) / HTTP response splitting" },
+        { id: "wapiti_csrf", display: "Wapiti: CSRF Flaws", category: "Wapiti", inputType: "url", description: "Detect forms missing anti-Cross-Site Request Forgery protections" },
+        { id: "wapiti_redirect", display: "Wapiti: Open Redirect", category: "Wapiti", inputType: "url", description: "Detect unvalidated URL redirection and open phishing relays" },
+        { id: "wapiti_htaccess", display: "Wapiti: Htaccess Bypass", category: "Wapiti", inputType: "url", description: "Attempt bypass of resource access controls using custom HTTP methods" },
+        { id: "wapiti_brute_login_form", display: "Wapiti: Brute Login Form", category: "Wapiti", inputType: "url", description: "Brute-force authentication forms with common weak credentials dictionary" },
+        { id: "wapiti_backup", display: "Wapiti: Backup Files", category: "Wapiti", inputType: "url", description: "Uncover backup copies of scripts and sensitive archives on the web server" },
+        { id: "wapiti_buster", display: "Wapiti: Buster Paths", category: "Wapiti", inputType: "url", description: "Brute-force directories and hidden files (DirBuster-style exploration)" },
+        { id: "wapiti_methods", display: "Wapiti: HTTP Methods", category: "Wapiti", inputType: "url", description: "Audit dangerous and uncommon HTTP methods (PUT, DELETE, OPTIONS, TRACE)" },
+        { id: "wapiti_ssl", display: "Wapiti: SSL/TLS Security", category: "Wapiti", inputType: "url", description: "Evaluate SSL/TLS certificate configuration and cipher suite vulnerabilities" },
+        { id: "wapiti_nikto", display: "Wapiti: Nikto Database", category: "Wapiti", inputType: "url", description: "Brute-force dangerous scripts and known flaws using Nikto rules database" },
+        { id: "wapiti_cms", display: "Wapiti: CMS Detection", category: "Wapiti", inputType: "url", description: "Detect CMS type and version (WordPress, Joomla, Drupal, PrestaShop, SPIP)" },
+        { id: "wapiti_wp_enum", display: "Wapiti: WordPress Enum", category: "Wapiti", inputType: "url", description: "Enumerate WordPress plugins, themes, and vulnerable component versions" },
+        { id: "wapiti_wapp", display: "Wapiti: Wappalyzer", category: "Wapiti", inputType: "url", description: "Identify web technologies using Wappalyzer and map to known CVEs" },
+        { id: "wapiti_htp", display: "Wapiti: HashThePlanet", category: "Wapiti", inputType: "url", description: "Fingerprint web server technologies using HashThePlanet database" },
+        { id: "wapiti_network_device", display: "Wapiti: Network Devices", category: "Wapiti", inputType: "url", description: "Detect network appliances, Citrix, Fortinet, Checkpoint, and Palo Alto" },
+        { id: "wapiti_printer", display: "Wapiti: Printers", category: "Wapiti", inputType: "url", description: "Detect networked printer interfaces and embedded firmware disclosure" },
+        { id: "wapiti_cookieflags", display: "Wapiti: Cookie Flags", category: "Wapiti", inputType: "url", description: "Audit Secure, HttpOnly, and SameSite flags on session cookies" },
+        { id: "wapiti_csp", display: "Wapiti: CSP Evaluator", category: "Wapiti", inputType: "url", description: "Evaluate Content Security Policy (CSP) presence and configuration weaknesses" },
+        { id: "wapiti_http_headers", display: "Wapiti: Security Headers", category: "Wapiti", inputType: "url", description: "Audit HTTP security headers (HSTS, X-Frame-Options, X-Content-Type-Options)" },
+        { id: "wapiti_https_redirect", display: "Wapiti: HTTPS Redirect", category: "Wapiti", inputType: "url", description: "Verify strict redirection from insecure HTTP connections to HTTPS" }
     ]
 
     property var toolEnabled: ({
@@ -94,6 +131,7 @@ ShellRoot {
         "nikto":        true,
         "whatweb":      true,
         "sqlmap":       true,
+        "wapiti":       true,
         "metasploit":   true,
         "msf_rpc":      true,
         "msfvenom":     true,
@@ -119,8 +157,8 @@ ShellRoot {
         "radare2":      true
     })
 
-    property var categories: ["OSINT", "Network", "Web", "Vulnerability", "Cloud", "Wireless", "Reverse Eng", "Exploit/Audit"]
-    property var expandedCategories: ({ "OSINT": false, "Network": false, "Web": false, "Vulnerability": false, "Cloud": false, "Wireless": false, "Reverse Eng": false, "Exploit/Audit": false })
+    property var categories: ["OSINT", "Network", "Web", "Vulnerability", "Wapiti", "Cloud", "Wireless", "Reverse Eng", "Exploit/Audit"]
+    property var expandedCategories: ({ "OSINT": false, "Network": false, "Web": false, "Vulnerability": false, "Wapiti": false, "Cloud": false, "Wireless": false, "Reverse Eng": false, "Exploit/Audit": false })
 
     // Resolve backend path once at startup — avoids URL-encoding issues with Qt.resolvedUrl
     property string backendPath: ""
