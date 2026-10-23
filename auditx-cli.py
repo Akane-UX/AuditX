@@ -81,12 +81,15 @@ def perform_network_recon():
 def print_ui(tools_list):
     os.system("clear")
     logo = [
-        r"      /\      ",
-        r"     /  \     ",
-        r"    /    \    ",
-        r"   /      \   ",
-        r"  /        \  ",
-        r" /          \ "
+        r"        /\        ",
+        r"       /  \       ",
+        r"      /    \      ",
+        r"     /  /\  \     ",
+        r"    /  /  \  \    ",
+        r"   /  /    \  \   ",
+        r"  /  /      \  \  ",
+        r" /__/        \__\ "
+
     ]
     
     right_header = [
