@@ -6,7 +6,7 @@ AuditX is a native Linux desktop GUI application built using Quickshell (Qt 6 QM
 
 ---
 
-## 📁 Project Directory Structure
+## Project Directory Structure
 
 ```text
 auditx/
@@ -25,7 +25,7 @@ auditx/
 
 ---
 
-## 🛠️ Integrated Security Categories & Tools (66 Tools Total)
+## Integrated Security Categories & Tools (66 Tools Total)
 
 - **Web Security**: `nikto`, `whatweb`, `sqlmap`, `gobuster`
 - **Wapiti Dedicated Suite (34 Modular Scanners + Master Runner)**:
@@ -41,7 +41,7 @@ auditx/
 
 ---
 
-## 🚀 Running the Application
+## Running the Application
 
 ### 1. GUI Edition (Quickshell)
 ```bash
@@ -57,7 +57,7 @@ python3 auditx-cli.py
 
 ---
 
-## ⚙️ Key Features
+## Key Features
 
 - **Dedicated Wapiti Suite Dropdown**: Dedicated accordion dropdown in GUI sidebar allowing one-click execution of all 34 modules or running any single module independently.
 - **Multi-Tab Terminal Console**: Switch between global output stream (`ALL`) and isolated live log tabs for each running tool.
@@ -69,7 +69,7 @@ python3 auditx-cli.py
 
 ---
 
-## 🐧 Linux Distribution Compatibility Matrix
+## Linux Distribution Compatibility Matrix
 
 | Distribution Family | AuditX CLI | AuditX GUI | Auto-Install Tools | Compatibility Tier |
 | :--- | :---: | :---: | :---: | :--- |
@@ -89,7 +89,7 @@ python3 auditx-cli.py
 
 ---
 
-## 🗺️ Multi-Distro Portability Roadmap
+## Multi-Distro Portability Roadmap
 
 Rencana pengembangan yang terdaftar di PRD untuk memperluas kompatibilitas out-of-the-box ke seluruh distribusi Linux:
 1. **Auto-Detect Package Manager di Backend**:
