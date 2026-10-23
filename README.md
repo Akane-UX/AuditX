@@ -69,7 +69,7 @@ python3 auditx-cli.py
 
 ---
 
-## Linux Distribution Compatibility Matrix
+## Distro Compatibility
 
 | Distribution Family | AuditX CLI | AuditX GUI | Auto-Install Tools | Compatibility Tier |
 | :--- | :---: | :---: | :---: | :--- |
@@ -88,14 +88,3 @@ python3 auditx-cli.py
 4. **Tier 4 (NixOS / Alpine)**: Membutuhkan environment non-FHS khusus (`flake.nix`) atau compatibility layer untuk pustaka `musl libc`.
 
 ---
-
-## Multi-Distro Portability Roadmap
-
-Rencana pengembangan yang terdaftar di PRD untuk memperluas kompatibilitas out-of-the-box ke seluruh distribusi Linux:
-1. **Auto-Detect Package Manager di Backend**:
-   - Menambahkan fungsi helper `detect_pkg_manager()` pada `backend/audit.py` untuk mengidentifikasi pengelola paket aktif (`pacman`, `apt-get`, `dnf`, `zypper`).
-   - Memetakan perintah instalasi otomatis secara dinamis sesuai distro pengguna.
-2. **Paket Distribusi Portabel GUI (AppImage / Flatpak)**:
-   - Membundel Quickshell runtime dan script QML AuditX ke dalam format AppImage mandiri, memungkinkan pengguna Ubuntu, Debian, dan Fedora menjalankan GUI dengan 1 klik tanpa kompilasi Qt 6.
-3. **Pre-flight Environment Diagnostics**:
-   - Menyediakan fitur diagnostik sistem (`auditx-cli check-env`) untuk memverifikasi ketersediaan perkakas dan menampilkan panduan instalasi spesifik distro.
