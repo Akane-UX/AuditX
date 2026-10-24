@@ -38,18 +38,18 @@ AuditX CLI gives you a terminal-based interface to run security tools without re
 
 ## Integrated Tools
 
-| Category | Tools | Target Type |
-|---|---|---|
-| **OSINT & Secrets** | Sherlock, theHarvester, Sublist3r, Gitleaks | Username, Domain, Path |
-| **Network & Active Directory** | Nmap, RustScan, NetExec, Enum4Linux-NG | IP / Subnet, Domain |
-| **Web Security** | Nikto, WhatWeb, SQLMap, Gobuster | URL, Domain |
-| **Wapiti Web Suite (35 options)** | Master Scanner (`-m all`) + 34 targeted attack modules | URL |
-| **Vulnerability Scanning** | Nuclei | URL, Domain |
-| **Exploitation & RPC** | Metasploit Aux, Metasploit RPC, Msfvenom, MSF Listener | IP, Port, Payload Config |
-| **Cloud Security** | ScoutSuite, Prowler, Pacu, Trivy Cloud, Checkov | Cloud Provider, Path |
-| **Wireless Security** | Aircrack-ng, Airodump-ng, Airmon-ng, Wifite, Kismet | Interface, Capture File |
-| **Reverse Engineering** | JADX, Apktool, Binwalk, Radare2 | File Path |
-| **Network Recon** | Built-in subnet discovery | Automatic / Subnet |
+| Category                                | Tools                                                    | Target Type              |
+| --------------------------------------- | -------------------------------------------------------- | ------------------------ |
+| **OSINT & Secrets**               | Sherlock, theHarvester, Sublist3r, Gitleaks              | Username, Domain, Path   |
+| **Network & Active Directory**    | Nmap, RustScan, NetExec, Enum4Linux-NG                   | IP / Subnet, Domain      |
+| **Web Security**                  | Nikto, WhatWeb, SQLMap, Gobuster                         | URL, Domain              |
+| **Wapiti Web Suite (35 options)** | Master Scanner (`-m all`) + 34 targeted attack modules | URL                      |
+| **Vulnerability Scanning**        | Nuclei                                                   | URL, Domain              |
+| **Exploitation & RPC**            | Metasploit Aux, Metasploit RPC, Msfvenom, MSF Listener   | IP, Port, Payload Config |
+| **Cloud Security**                | ScoutSuite, Prowler, Pacu, Trivy Cloud, Checkov          | Cloud Provider, Path     |
+| **Wireless Security**             | Aircrack-ng, Airodump-ng, Airmon-ng, Wifite, Kismet      | Interface, Capture File  |
+| **Reverse Engineering**           | JADX, Apktool, Binwalk, Radare2                          | File Path                |
+| **Network Recon**                 | Built-in subnet discovery                                | Automatic / Subnet       |
 
 ---
 
@@ -76,6 +76,7 @@ chmod +x install.sh
 ```
 
 This creates:
+
 - `auditx-cli` pointing to `auditx-cli.py`
 - `auditx-gui` pointing to `launch.sh`
 
@@ -106,8 +107,51 @@ python3 auditx-cli.py
 ## Exporting Reports
 
 After running a scan, the CLI allows exporting outputs into formatted files:
+
 - Markdown (`.md`)
 - JSON (`.json`)
 - Plain text (`.txt`)
 
 You can specify a custom file path or accept the default timestamped filename in the current directory.
+
+---
+
+## Credits Tools
+
+AuditX CLI coordinates open-source security tools created by security researchers and developers. Full credit goes to their authors:
+
+| Tool                           | Developers / Maintainers                                                      | Source / Website                                                                                                                |
+| ------------------------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Wapiti**               | Maxime Alay-Eddine, Julien Tauran, David del Pozo, Alberto Pastor             | [wapiti-scanner/wapiti](https://github.com/wapiti-scanner/wapiti) / [wapiti-scanner.github.io](https://wapiti-scanner.github.io/) |
+| **Sherlock**             | Siddharth Dushantha & Sherlock Project contributors                           | [sherlock-project/sherlock](https://github.com/sherlock-project/sherlock)                                                        |
+| **theHarvester**         | Christian Martorella (@laramies) & contributors                               | [laramies/theHarvester](https://github.com/laramies/theHarvester)                                                                |
+| **Sublist3r**            | Ahmed Aboul-Ela (@aboul3la)                                                   | [aboul3la/Sublist3r](https://github.com/aboul3la/Sublist3r)                                                                      |
+| **Nmap**                 | Gordon Lyon (Fyodor) / Insecure.Com LLC                                       | [nmap.org](https://nmap.org/) / [nmap/nmap](https://github.com/nmap/nmap)                                                         |
+| **RustScan**             | Branden (bee-san) & RustScan Community                                        | [RustScan/RustScan](https://github.com/RustScan/RustScan)                                                                        |
+| **Nikto**                | Chris Sullo, David Lodge & CIRT.net                                           | [sullo/nikto](https://github.com/sullo/nikto)                                                                                    |
+| **WhatWeb**              | Andrew Horton (urbanadventurer), Brendan Coles (bcoles)                       | [urbanadventurer/WhatWeb](https://github.com/urbanadventurer/WhatWeb)                                                            |
+| **SQLMap**               | Bernardo Damele A. G., Miroslav Stampar                                       | [sqlmap.org](https://sqlmap.org/) / [sqlmapproject/sqlmap](https://github.com/sqlmapproject/sqlmap)                               |
+| **Nuclei**               | ProjectDiscovery                                                              | [projectdiscovery/nuclei](https://github.com/projectdiscovery/nuclei)                                                            |
+| **Metasploit Framework** | Rapid7 & Metasploit Community (founded by H.D. Moore)                         | [rapid7/metasploit-framework](https://github.com/rapid7/metasploit-framework) / [metasploit.com](https://www.metasploit.com/)     |
+| **Gobuster**             | Christian Mehlmauer (@OJ)                                                     | [OJ/gobuster](https://github.com/OJ/gobuster)                                                                                    |
+| **NetExec**              | Pennyw1se, mpgn & NetExec contributors (original CrackMapExec by byt3bl33d3r) | [Pennyw1se/NetExec](https://github.com/Pennyw1se/NetExec)                                                                        |
+| **Enum4linux-ng**        | René de Koster (@cddmp)                                                      | [cddmp/enum4linux-ng](https://github.com/cddmp/enum4linux-ng)                                                                    |
+| **Gitleaks**             | Zachary Rice (@zricethezav)                                                   | [gitleaks/gitleaks](https://github.com/gitleaks/gitleaks)                                                                        |
+| **ScoutSuite**           | NCC Group                                                                     | [nccgroup/ScoutSuite](https://github.com/nccgroup/ScoutSuite)                                                                    |
+| **Prowler**              | Toni de la Fuente & Prowler Open Source Contributors                          | [prowler-cloud/prowler](https://github.com/prowler-cloud/prowler)                                                                |
+| **Pacu**                 | Rhino Security Labs                                                           | [RhinoSecurityLabs/pacu](https://github.com/RhinoSecurityLabs/pacu)                                                              |
+| **Trivy**                | Aqua Security                                                                 | [aquasecurity/trivy](https://github.com/aquasecurity/trivy)                                                                      |
+| **Checkov**              | Bridgecrew (Palo Alto Networks)                                               | [bridgecrewio/checkov](https://github.com/bridgecrewio/checkov)                                                                  |
+| **Aircrack-ng**          | Thomas d'Otreppe (Mister_X) & Aircrack-ng team                                | [aircrack-ng.org](https://www.aircrack-ng.org/) / [aircrack-ng/aircrack-ng](https://github.com/aircrack-ng/aircrack-ng)           |
+| **Wifite**               | derv82, kimocoder                                                             | [derv82/wifite2](https://github.com/derv82/wifite2)                                                                              |
+| **Kismet**               | Mike Kershaw (dragorn)                                                        | [kismetwireless.net](https://www.kismetwireless.net/) / [kismetwireless/kismet](https://github.com/kismetwireless/kismet)         |
+| **JADX**                 | Skylot                                                                        | [skylot/jadx](https://github.com/skylot/jadx)                                                                                    |
+| **Apktool**              | Connor Tumbleson (iBotPeaches), Ryszard Wiśniewski (brutall)                 | [iBotPeaches/Apktool](https://github.com/iBotPeaches/Apktool)                                                                    |
+| **Binwalk**              | Craig Heffner / ReFirm Labs                                                   | [ReFirmLabs/binwalk](https://github.com/ReFirmLabs/binwalk)                                                                      |
+| **Radare2**              | Sergi Àlvarez (pancake) & Radare2 Community                                  | [rada.re](https://rada.re/) / [radareorg/radare2](https://github.com/radareorg/radare2)                                           |
+
+---
+
+## Legal Disclaimer
+
+AuditX CLI is intended only for authorized penetration testing, vulnerability assessments, and educational research on systems with explicit written permission. Unauthorized testing against target systems without consent is prohibited.
