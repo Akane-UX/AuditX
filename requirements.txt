@@ -1,0 +1,2 @@
+pymetasploit3>=1.0.4
+msgpack>=1.0.0

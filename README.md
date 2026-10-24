@@ -1,8 +1,10 @@
 # AuditX — Security Audit Platform
 
 > **Status:** Active Development (Prototype Phase)
+> 
+> **Documentation:** [AuditX CLI Guide](README-CLI.md) | [Distro Compatibility](#distro-compatibility)
 
-AuditX is a native Linux desktop GUI application built using Quickshell (Qt 6 QML) and Python to coordinate and execute security audit tools in parallel or sequence, displaying real-time terminal output, deterministic rule-based executive summaries, and structured reports. It also ships with a standalone interactive terminal CLI edition (`auditx-cli.py`).
+AuditX is a native Linux desktop GUI application built using Quickshell (Qt 6 QML) and Python to coordinate and execute security audit tools in parallel or sequence, displaying real-time terminal output, deterministic rule-based executive summaries, and structured reports. It also ships with a standalone interactive terminal CLI edition (`auditx-cli.py`, see [AuditX CLI Documentation](README-CLI.md)).
 
 ---
 
@@ -11,6 +13,7 @@ AuditX is a native Linux desktop GUI application built using Quickshell (Qt 6 QM
 ```text
 auditx/
 ├── backend/
+│   ├── __init__.py
 │   └── audit.py          # Python orchestrator, tool registry & backend CLI
 ├── components/
 │   ├── ConsoleView.qml   # Multi-tab live streaming output terminal
@@ -18,8 +21,12 @@ auditx/
 │   ├── ReportView.qml    # Rule-based executive summarizer & report builder
 │   ├── TargetBar.qml     # Dynamic multi-type target selector (IP, Domain, URL, Cloud, Path, User, Interface)
 │   └── ToolCard.qml      # Selectable tool configuration cards with live status
-├── launch.sh             # Main application startup script
 ├── auditx-cli.py         # Standalone terminal CLI edition
+├── install.sh            # Helper installer for PATH symlinks
+├── launch.sh             # Main application startup script
+├── README.md             # Primary documentation
+├── README-CLI.md         # Dedicated CLI documentation
+├── requirements.txt      # Optional Python dependencies
 └── shell.qml             # Main entry point & Quickshell orchestrator
 ```
 
@@ -53,7 +60,10 @@ quickshell --path /home/avrlln/auditx/shell.qml
 ### 2. Standalone CLI Edition
 ```bash
 python3 auditx-cli.py
+# Atau setelah menjalankan ./install.sh:
+auditx-cli
 ```
+Panduan lengkap, daftar opsi target, dan fitur ekspor CLI tersedia di [README-CLI.md](README-CLI.md).
 
 ---
 
