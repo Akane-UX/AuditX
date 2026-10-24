@@ -1,4 +1,4 @@
-# AuditX — Security Audit Platform
+# AuditX - Security Audit Platform
 
 > ***Experimental Project***
 >
@@ -54,15 +54,15 @@ auditx/
 
 ```bash
 ./launch.sh
-# Atau langsung menggunakan binary quickshell:
-quickshell --path /home/avrlln/auditx/shell.qml
+# Or using binary quickshell:
+quickshell --path /home/auditx/shell.qml
 ```
 
 ### 2. Standalone CLI Edition
 
 ```bash
 python3 auditx-cli.py
-# Atau setelah menjalankan ./install.sh:
+# Or after exec ./install.sh:
 auditx-cli
 ```
 
