@@ -9,28 +9,27 @@ Interactive terminal interface and security tool orchestrator for security asses
 AuditX CLI gives you a terminal-based interface to run security tools without remembering command-line flags. It formats targets, runs the selected tools, and streams output directly to the terminal.
 
 ```text
-        /\         AuditX - v1.9.0-cli
-       /  \        Available Tools:
-      /    \       [1] Sherlock                   [2] theHarvester
-     /  /\  \      [3] Sublist3r                  [4] Nmap
-    /  /  \  \     [5] RustScan                   [6] Nikto
-   /  /    \  \    [7] WhatWeb                    [8] SQLMap
-  /  /      \  \   [9] Metasploit Aux             [10] Metasploit RPC
- /__/        \__\  [11] Msfvenom Payload          [12] Nuclei
-                   ...                            ...
-                   [67] Network Recon             [0] Exit / Quit
+        /\           AuditX CLI - v1.9.0
+       /  \          Tool Groups by Function:
+      /    \         [1] OSINT & Recon (4)        [6] Exploitation & RPC (3)
+     /  /\  \        [2] Network & Scan (5)       [7] Cloud Security (5)
+    /  /  \  \       [3] Web Security (4)         [8] Wireless Security (5)
+   /  /    \  \      [4] Wapiti Suite (35)        [9] Reverse Engineering (4)
+  /  /      \  \     [5] Vulnerability Scan (1)   [10] Built-in Network Recon
+ /__/        \__\    [c] Clear Terminal           [0] Exit / Quit
 ```
 
 ---
 
 ## Features
 
-- **Interactive menu**: Returns to the main menu after each scan, with an explicit `0` or `q` to exit.
-- **Two-column layout**: Quick selection for 66 security tools plus built-in Network Recon.
+- **Compact Category Grouping**: All 66 security tools are organized into 9 functional types plus built-in Network Recon for a clean, compact terminal interface.
+- **Continuous Scroll Flow**: Selecting categories and running tools appends output cleanly downward without clearing your terminal screen or erasing scrollback history.
+- **Direct Category Views**: Focused tool lists without repetitive logos or banners, showing all tools in the chosen category directly.
+- **Clear Terminal Option**: Dedicated `[c]` option in the main menu (and tool menus) to wipe and reset the terminal view on demand.
 - **Target routing**: Prompts for the appropriate input type based on the selected tool (IP address, domain, URL, local path, username, cloud provider, or network interface).
 - **Wapiti suite integration**: Run the master scan (`-m all`) or pick from 34 individual attack modules.
 - **Network reconnaissance**: Detects local IP configurations and performs subnet scans using `nmap` or `arp-scan`.
-- **Report export**: Save scan results to `.md`, `.json`, or `.txt`.
 - **Metasploit RPC**: Connect to and run auxiliary modules through `msfrpcd`.
 - **Terminal native**: Runs in any standard terminal without graphical dependencies.
 
