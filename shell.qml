@@ -20,7 +20,7 @@ ShellRoot {
 
     property string target: (targetIp || targetDomain || targetUrl || targetCloud || targetPath || targetUsername || targetInterface || "")
     property bool   isRunning: false
-    property string activeTab: "console"   // "console" | "report"
+    property string activeTab: "console"   // "console" | "report" | "terminal"
     property var    toolRunState: ({})      // tool -> "idle" | "running" | "done" | "failed"
     property var    toolLines: ({})         // tool -> array of output lines
     property var    missingTools: []        // tool ids not detected
@@ -800,7 +800,7 @@ ShellRoot {
                     Row {
                         spacing: 4
                         Repeater {
-                            model: [["console", "Console"], ["report", "Report"]]
+                            model: [["console", "Console"], ["report", "Report"], ["terminal", "Terminal"]]
                             Rectangle {
                                 width: 100; height: 28; radius: 4
                                 color: activeTab === modelData[0] ? "#111111" : "#0a0a0a"
@@ -841,6 +841,22 @@ ShellRoot {
                             target: target
                             visible: activeTab === "report"
                             opacity: activeTab === "report" ? 1 : 0
+                            Behavior on opacity { NumberAnimation { duration: 150 } }
+                        }
+
+                        TerminalView {
+                            id: terminalView
+                            anchors.fill: parent
+                            backendPath: root.backendPath
+                            targetIp: root.targetIp
+                            targetDomain: root.targetDomain
+                            targetUrl: root.targetUrl
+                            targetCloud: root.targetCloud
+                            targetPath: root.targetPath
+                            targetUsername: root.targetUsername
+                            targetInterface: root.targetInterface
+                            visible: activeTab === "terminal"
+                            opacity: activeTab === "terminal" ? 1 : 0
                             Behavior on opacity { NumberAnimation { duration: 150 } }
                         }
                     }

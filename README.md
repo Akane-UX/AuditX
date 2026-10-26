@@ -14,12 +14,14 @@ AuditX is a native Linux desktop GUI application built using Quickshell (Qt 6 QM
 auditx/
 ├── backend/
 │   ├── __init__.py
-│   └── audit.py          # Python orchestrator, tool registry & backend CLI
+│   ├── audit.py          # Python orchestrator, tool registry & backend CLI
+│   └── pty_runner.py     # Interactive pseudo-terminal (PTY) runner with ANSI parser
 ├── components/
 │   ├── ConsoleView.qml   # Multi-tab live streaming output terminal
 │   ├── ExportModal.qml   # Interactive file destination & format picker modal
 │   ├── ReportView.qml    # Rule-based executive summarizer & report builder
 │   ├── TargetBar.qml     # Dynamic multi-type target selector (IP, Domain, URL, Cloud, Path, User, Interface)
+│   ├── TerminalView.qml  # Embedded interactive Bash terminal with PTY & target variable injection
 │   └── ToolCard.qml      # Selectable tool configuration cards with live status
 ├── auditx-cli.py         # Standalone terminal CLI edition
 ├── install.sh            # Helper installer for PATH symlinks

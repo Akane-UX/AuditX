@@ -889,6 +889,12 @@ def main():
     recon_p = sub.add_parser("recon", help="Perform Network Recon (local IP & subnet sweep)")
     recon_p.add_argument("target", nargs="?", default="", help="Optional specific subnet or IP")
 
+    # Terminal Runner command (PTY interactive execution)
+    term_p = sub.add_parser("terminal-exec", help="Run interactive command in PTY pseudo-terminal")
+    term_p.add_argument("--command", "--cmd", dest="exec_cmd", required=True, help="Command to execute in bash PTY")
+    term_p.add_argument("--targets", default="{}", help="JSON targets dictionary")
+    term_p.add_argument("--cwd", default=None, help="Working directory")
+
     args = parser.parse_args()
 
     if args.cmd == "status":
@@ -954,6 +960,23 @@ def main():
 
     elif args.cmd == "recon":
         run_network_recon(args.target)
+
+    elif args.cmd == "terminal-exec":
+        try:
+            from .pty_runner import run_pty_session
+        except ImportError:
+            try:
+                from pty_runner import run_pty_session
+            except ImportError:
+                from backend.pty_runner import run_pty_session
+        targets_dict = {}
+        if args.targets:
+            try:
+                targets_dict = json.loads(args.targets)
+            except Exception:
+                targets_dict = {}
+        code = run_pty_session(args.exec_cmd, targets_dict, args.cwd)
+        sys.exit(code if code is not None else 0)
 
     else:
         parser.print_help()
